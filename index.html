@@ -1,1 +1,805 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="style.css"></head><body><div id="titlebar"><h1>Scheduler</h1><button id="theme-toggle" aria-label="Toggle Theme"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2"/></svg></button></div><div id="main-content"><div id="left-panels"><div class="panel left-panel-1"><div class="course-input-container"><input type="text" id="course-name-input" placeholder="Enter course name" class="course-input"> <button id="add-course-btn" class="add-course-btn"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div id="courses-list" class="courses-list"></div></div><div class="panel left-panel-2"><div class="constraints-section"><div class="constraint-inputs"><div class="input-group"><label for="min-days">Min Days/Week:</label> <input type="number" id="min-days" min="1" max="6" value="1"></div><div class="input-group"><label for="max-days">Max Days/Week:</label> <input type="number" id="max-days" min="1" max="6" value="6"></div><div class="input-group"><label for="min-sessions">Min Sessions/Day:</label> <input type="number" id="min-sessions" min="1" max="6" value="1"></div><div class="input-group"><label for="max-sessions">Max Sessions/Day:</label> <input type="number" id="max-sessions" min="1" max="6" value="6"></div></div></div><div class="availability-section"><div class="availability-grid"><div class="availability-row availability-header"><div class="availability-cell availability-corner"></div><div class="availability-cell availability-day-header" data-day="Sat">Sat</div><div class="availability-cell availability-day-header" data-day="Sun">Sun</div><div class="availability-cell availability-day-header" data-day="Mon">Mon</div><div class="availability-cell availability-day-header" data-day="Tue">Tue</div><div class="availability-cell availability-day-header" data-day="Wed">Wed</div><div class="availability-cell availability-day-header" data-day="Thu">Thu</div></div><div class="availability-row"><div class="availability-cell availability-period-header" data-period="8:30">8:30</div><div class="availability-cell availability-slot" data-day="Sat" data-period="8:30"></div><div class="availability-cell availability-slot" data-day="Sun" data-period="8:30"></div><div class="availability-cell availability-slot" data-day="Mon" data-period="8:30"></div><div class="availability-cell availability-slot" data-day="Tue" data-period="8:30"></div><div class="availability-cell availability-slot" data-day="Wed" data-period="8:30"></div><div class="availability-cell availability-slot" data-day="Thu" data-period="8:30"></div></div><div class="availability-row"><div class="availability-cell availability-period-header" data-period="10:30">10:30</div><div class="availability-cell availability-slot" data-day="Sat" data-period="10:30"></div><div class="availability-cell availability-slot" data-day="Sun" data-period="10:30"></div><div class="availability-cell availability-slot" data-day="Mon" data-period="10:30"></div><div class="availability-cell availability-slot" data-day="Tue" data-period="10:30"></div><div class="availability-cell availability-slot" data-day="Wed" data-period="10:30"></div><div class="availability-cell availability-slot" data-day="Thu" data-period="10:30"></div></div><div class="availability-row"><div class="availability-cell availability-period-header" data-period="12:30">12:30</div><div class="availability-cell availability-slot" data-day="Sat" data-period="12:30"></div><div class="availability-cell availability-slot" data-day="Sun" data-period="12:30"></div><div class="availability-cell availability-slot" data-day="Mon" data-period="12:30"></div><div class="availability-cell availability-slot" data-day="Tue" data-period="12:30"></div><div class="availability-cell availability-slot" data-day="Wed" data-period="12:30"></div><div class="availability-cell availability-slot" data-day="Thu" data-period="12:30"></div></div><div class="availability-row"><div class="availability-cell availability-period-header" data-period="14:30">14:30</div><div class="availability-cell availability-slot" data-day="Sat" data-period="14:30"></div><div class="availability-cell availability-slot" data-day="Sun" data-period="14:30"></div><div class="availability-cell availability-slot" data-day="Mon" data-period="14:30"></div><div class="availability-cell availability-slot" data-day="Tue" data-period="14:30"></div><div class="availability-cell availability-slot" data-day="Wed" data-period="14:30"></div><div class="availability-cell availability-slot" data-day="Thu" data-period="14:30"></div></div><div class="availability-row"><div class="availability-cell availability-period-header" data-period="16:30">16:30</div><div class="availability-cell availability-slot" data-day="Sat" data-period="16:30"></div><div class="availability-cell availability-slot" data-day="Sun" data-period="16:30"></div><div class="availability-cell availability-slot" data-day="Mon" data-period="16:30"></div><div class="availability-cell availability-slot" data-day="Tue" data-period="16:30"></div><div class="availability-cell availability-slot" data-day="Wed" data-period="16:30"></div><div class="availability-cell availability-slot" data-day="Thu" data-period="16:30"></div></div><div class="availability-row"><div class="availability-cell availability-period-header" data-period="18:30">18:30</div><div class="availability-cell availability-slot" data-day="Sat" data-period="18:30"></div><div class="availability-cell availability-slot" data-day="Sun" data-period="18:30"></div><div class="availability-cell availability-slot" data-day="Mon" data-period="18:30"></div><div class="availability-cell availability-slot" data-day="Tue" data-period="18:30"></div><div class="availability-cell availability-slot" data-day="Wed" data-period="18:30"></div><div class="availability-cell availability-slot" data-day="Thu" data-period="18:30"></div></div></div></div><button id="generate-btn" class="generate-btn">Generate</button></div></div><div id="right-panel" class="panel"><div id="schedule-status" style="padding:.8vh 1.2vh;font-size:1.3vh;display:flex;align-items:center;gap:1vh;flex-wrap:wrap"><div id="schedule-status-text" style="flex:1 1 auto;opacity:.85"></div><div id="schedule-nav" style="display:flex;align-items:center;gap:.6vh"><button id="prev-schedule" aria-label="Previous Schedule" style="padding:.4vh .9vh;font-size:1.2vh;cursor:pointer">◀</button> <span id="schedule-index" style="font-weight:600;font-size:1.2vh;min-width:6ch;text-align:center">-/-</span> <button id="next-schedule" aria-label="Next Schedule" style="padding:.4vh .9vh;font-size:1.2vh;cursor:pointer">▶</button></div></div><div id="schedule-grid" style="min-height:100px"></div></div></div><div id="modal-overlay" class="modal-overlay"><div class="modal-container"><div class="modal-tabs"><button class="tab-btn active" data-tab="lectures">Lectures</button> <button class="tab-btn" data-tab="sections">Sections</button></div><div class="modal-content"><div id="lectures-tab" class="tab-content active"><div class="form-group"><div id="lecture-day-switch" class="day-switch"><input checked id="lecture-sat" name="lecture-day" value="Sat" type="radio"> <label class="day-option" for="lecture-sat">Sat</label> <input id="lecture-sun" name="lecture-day" value="Sun" type="radio"> <label class="day-option" for="lecture-sun">Sun</label> <input id="lecture-mon" name="lecture-day" value="Mon" type="radio"> <label class="day-option" for="lecture-mon">Mon</label> <input id="lecture-tue" name="lecture-day" value="Tue" type="radio"> <label class="day-option" for="lecture-tue">Tue</label> <input id="lecture-wed" name="lecture-day" value="Wed" type="radio"> <label class="day-option" for="lecture-wed">Wed</label> <input id="lecture-thu" name="lecture-day" value="Thu" type="radio"> <label class="day-option" for="lecture-thu">Thu</label><div class="day-background"></div></div></div><div class="form-group"><div id="lecture-time-switch" class="time-switch"><input checked id="lecture-time-1" name="lecture-time" value="8:30" type="radio"> <label class="time-option" for="lecture-time-1">8:30</label> <input id="lecture-time-2" name="lecture-time" value="10:30" type="radio"> <label class="time-option" for="lecture-time-2">10:30</label> <input id="lecture-time-3" name="lecture-time" value="12:30" type="radio"> <label class="time-option" for="lecture-time-3">12:30</label> <input id="lecture-time-4" name="lecture-time" value="14:30" type="radio"> <label class="time-option" for="lecture-time-4">14:30</label> <input id="lecture-time-5" name="lecture-time" value="16:30" type="radio"> <label class="time-option" for="lecture-time-5">16:30</label> <input id="lecture-time-6" name="lecture-time" value="18:30" type="radio"> <label class="time-option" for="lecture-time-6">18:30</label> <span class="time-background"></span></div></div><div class="form-group"><div class="room-switch-row"><input type="text" id="lecture-room" placeholder="Room number" class="form-input"><div class="tri-switch" id="lecture-room-switch" role="radiogroup" aria-label="Room availability"><button class="tri-option" data-value="unavailable" aria-pressed="false" title="Unavailable"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button> <button class="tri-option" data-value="unknown" aria-pressed="false" title="Unknown"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button> <button class="tri-option active" data-value="available" aria-pressed="true" title="Available"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button> <span class="tri-background"></span></div></div></div><button id="add-lecture-btn" class="add-entry-btn">Add Lecture</button></div><div id="sections-tab" class="tab-content"><div class="form-group"><div id="section-day-switch" class="day-switch"><input checked id="section-sat" name="section-day" value="Sat" type="radio"> <label class="day-option" for="section-sat">Sat</label> <input id="section-sun" name="section-day" value="Sun" type="radio"> <label class="day-option" for="section-sun">Sun</label> <input id="section-mon" name="section-day" value="Mon" type="radio"> <label class="day-option" for="section-mon">Mon</label> <input id="section-tue" name="section-day" value="Tue" type="radio"> <label class="day-option" for="section-tue">Tue</label> <input id="section-wed" name="section-day" value="Wed" type="radio"> <label class="day-option" for="section-wed">Wed</label> <input id="section-thu" name="section-day" value="Thu" type="radio"> <label class="day-option" for="section-thu">Thu</label><div class="day-background"></div></div></div><div class="form-group"><div id="section-time-switch" class="time-switch"><input checked id="section-time-1" name="section-time" value="8:30" type="radio"> <label class="time-option" for="section-time-1">8:30</label> <input id="section-time-2" name="section-time" value="10:30" type="radio"> <label class="time-option" for="section-time-2">10:30</label> <input id="section-time-3" name="section-time" value="12:30" type="radio"> <label class="time-option" for="section-time-3">12:30</label> <input id="section-time-4" name="section-time" value="14:30" type="radio"> <label class="time-option" for="section-time-4">14:30</label> <input id="section-time-5" name="section-time" value="16:30" type="radio"> <label class="time-option" for="section-time-5">16:30</label> <input id="section-time-6" name="section-time" value="18:30" type="radio"> <label class="time-option" for="section-time-6">18:30</label> <span class="time-background"></span></div></div><div class="form-group"><div class="room-switch-row"><input type="text" id="section-room" placeholder="Room number" class="form-input"><div class="tri-switch" id="section-room-switch" role="radiogroup" aria-label="Room availability"><button class="tri-option" data-value="unavailable" aria-pressed="false" title="Unavailable"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button> <button class="tri-option" data-value="unknown" aria-pressed="false" title="Unknown"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button> <button class="tri-option active" data-value="available" aria-pressed="true" title="Available"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button> <span class="tri-background"></span></div></div></div><button id="add-section-btn" class="add-entry-btn">Add Section</button></div></div><div class="entries-list"><div id="entries-container-lectures" class="entries-subcontainer"></div><div id="entries-container-sections" class="entries-subcontainer" style="display:none"></div></div></div></div><script src="script.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="titlebar">
+      <h1>Scheduler</h1>
+      <button id="theme-toggle" aria-label="Toggle Theme">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle
+            cx="12"
+            cy="12"
+            r="5"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+          <path
+            d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+        </svg>
+      </button>
+    </div>
+    <div id="main-content">
+      <div id="left-panels">
+        <div class="panel left-panel-1">
+          <div class="course-input-container">
+            <input
+              type="text"
+              id="course-name-input"
+              placeholder="Enter course name"
+              class="course-input"
+            />
+            <button id="add-course-btn" class="add-course-btn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 5v14M5 12h14"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+          <div id="courses-list" class="courses-list"></div>
+        </div>
+        <div class="panel left-panel-2">
+          <div class="constraints-section">
+            <div class="constraint-inputs">
+              <div class="input-group">
+                <label for="min-days">Min Days/Week:</label>
+                <input type="number" id="min-days" min="1" max="6" value="1" />
+              </div>
+              <div class="input-group">
+                <label for="max-days">Max Days/Week:</label>
+                <input type="number" id="max-days" min="1" max="6" value="6" />
+              </div>
+              <div class="input-group">
+                <label for="min-sessions">Min Sessions/Day:</label>
+                <input
+                  type="number"
+                  id="min-sessions"
+                  min="1"
+                  max="6"
+                  value="1"
+                />
+              </div>
+              <div class="input-group">
+                <label for="max-sessions">Max Sessions/Day:</label>
+                <input
+                  type="number"
+                  id="max-sessions"
+                  min="1"
+                  max="6"
+                  value="6"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="availability-section">
+            <div class="availability-grid">
+              <div class="availability-row availability-header">
+                <div class="availability-cell availability-corner"></div>
+                <div
+                  class="availability-cell availability-day-header"
+                  data-day="Sat"
+                >
+                  Sat
+                </div>
+                <div
+                  class="availability-cell availability-day-header"
+                  data-day="Sun"
+                >
+                  Sun
+                </div>
+                <div
+                  class="availability-cell availability-day-header"
+                  data-day="Mon"
+                >
+                  Mon
+                </div>
+                <div
+                  class="availability-cell availability-day-header"
+                  data-day="Tue"
+                >
+                  Tue
+                </div>
+                <div
+                  class="availability-cell availability-day-header"
+                  data-day="Wed"
+                >
+                  Wed
+                </div>
+                <div
+                  class="availability-cell availability-day-header"
+                  data-day="Thu"
+                >
+                  Thu
+                </div>
+              </div>
+              <div class="availability-row">
+                <div
+                  class="availability-cell availability-period-header"
+                  data-period="8:30"
+                >
+                  8:30
+                </div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Sat"
+                  data-period="8:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Sun"
+                  data-period="8:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Mon"
+                  data-period="8:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Tue"
+                  data-period="8:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Wed"
+                  data-period="8:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Thu"
+                  data-period="8:30"
+                ></div>
+              </div>
+              <div class="availability-row">
+                <div
+                  class="availability-cell availability-period-header"
+                  data-period="10:30"
+                >
+                  10:30
+                </div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Sat"
+                  data-period="10:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Sun"
+                  data-period="10:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Mon"
+                  data-period="10:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Tue"
+                  data-period="10:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Wed"
+                  data-period="10:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Thu"
+                  data-period="10:30"
+                ></div>
+              </div>
+              <div class="availability-row">
+                <div
+                  class="availability-cell availability-period-header"
+                  data-period="12:30"
+                >
+                  12:30
+                </div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Sat"
+                  data-period="12:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Sun"
+                  data-period="12:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Mon"
+                  data-period="12:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Tue"
+                  data-period="12:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Wed"
+                  data-period="12:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Thu"
+                  data-period="12:30"
+                ></div>
+              </div>
+              <div class="availability-row">
+                <div
+                  class="availability-cell availability-period-header"
+                  data-period="14:30"
+                >
+                  14:30
+                </div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Sat"
+                  data-period="14:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Sun"
+                  data-period="14:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Mon"
+                  data-period="14:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Tue"
+                  data-period="14:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Wed"
+                  data-period="14:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Thu"
+                  data-period="14:30"
+                ></div>
+              </div>
+              <div class="availability-row">
+                <div
+                  class="availability-cell availability-period-header"
+                  data-period="16:30"
+                >
+                  16:30
+                </div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Sat"
+                  data-period="16:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Sun"
+                  data-period="16:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Mon"
+                  data-period="16:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Tue"
+                  data-period="16:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Wed"
+                  data-period="16:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Thu"
+                  data-period="16:30"
+                ></div>
+              </div>
+              <div class="availability-row">
+                <div
+                  class="availability-cell availability-period-header"
+                  data-period="18:30"
+                >
+                  18:30
+                </div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Sat"
+                  data-period="18:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Sun"
+                  data-period="18:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Mon"
+                  data-period="18:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Tue"
+                  data-period="18:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Wed"
+                  data-period="18:30"
+                ></div>
+                <div
+                  class="availability-cell availability-slot"
+                  data-day="Thu"
+                  data-period="18:30"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <button id="generate-btn" class="generate-btn">Generate</button>
+        </div>
+      </div>
+      <div id="right-panel" class="panel">
+        <div
+          id="schedule-status"
+          style="
+            padding: 0.8vh 1.2vh;
+            font-size: 1.3vh;
+            display: flex;
+            align-items: center;
+            gap: 1vh;
+            flex-wrap: wrap;
+          "
+        >
+          <div
+            id="schedule-status-text"
+            style="flex: 1 1 auto; opacity: 0.85"
+          ></div>
+          <div
+            id="schedule-nav"
+            style="display: flex; align-items: center; gap: 0.6vh"
+          >
+            <button
+              id="prev-schedule"
+              aria-label="Previous Schedule"
+              style="padding: 0.4vh 0.9vh; font-size: 1.2vh; cursor: pointer"
+            >
+              ◀
+            </button>
+            <span
+              id="schedule-index"
+              style="
+                font-weight: 600;
+                font-size: 1.2vh;
+                min-width: 6ch;
+                text-align: center;
+              "
+              >-/-</span
+            >
+            <button
+              id="next-schedule"
+              aria-label="Next Schedule"
+              style="padding: 0.4vh 0.9vh; font-size: 1.2vh; cursor: pointer"
+            >
+              ▶
+            </button>
+          </div>
+        </div>
+        <div id="schedule-grid" style="min-height: 100px"></div>
+      </div>
+    </div>
+    <div id="modal-overlay" class="modal-overlay">
+      <div class="modal-container">
+        <div class="modal-tabs">
+          <button class="tab-btn active" data-tab="lectures">Lectures</button>
+          <button class="tab-btn" data-tab="sections">Sections</button>
+        </div>
+        <div class="modal-content">
+          <div id="lectures-tab" class="tab-content active">
+            <div class="form-group">
+              <div id="lecture-day-switch" class="day-switch">
+                <input
+                  checked
+                  id="lecture-sat"
+                  name="lecture-day"
+                  value="Sat"
+                  type="radio"
+                />
+                <label class="day-option" for="lecture-sat">Sat</label>
+                <input
+                  id="lecture-sun"
+                  name="lecture-day"
+                  value="Sun"
+                  type="radio"
+                />
+                <label class="day-option" for="lecture-sun">Sun</label>
+                <input
+                  id="lecture-mon"
+                  name="lecture-day"
+                  value="Mon"
+                  type="radio"
+                />
+                <label class="day-option" for="lecture-mon">Mon</label>
+                <input
+                  id="lecture-tue"
+                  name="lecture-day"
+                  value="Tue"
+                  type="radio"
+                />
+                <label class="day-option" for="lecture-tue">Tue</label>
+                <input
+                  id="lecture-wed"
+                  name="lecture-day"
+                  value="Wed"
+                  type="radio"
+                />
+                <label class="day-option" for="lecture-wed">Wed</label>
+                <input
+                  id="lecture-thu"
+                  name="lecture-day"
+                  value="Thu"
+                  type="radio"
+                />
+                <label class="day-option" for="lecture-thu">Thu</label>
+                <div class="day-background"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div id="lecture-time-switch" class="time-switch">
+                <input
+                  checked
+                  id="lecture-time-1"
+                  name="lecture-time"
+                  value="8:30"
+                  type="radio"
+                />
+                <label class="time-option" for="lecture-time-1">8:30</label>
+                <input
+                  id="lecture-time-2"
+                  name="lecture-time"
+                  value="10:30"
+                  type="radio"
+                />
+                <label class="time-option" for="lecture-time-2">10:30</label>
+                <input
+                  id="lecture-time-3"
+                  name="lecture-time"
+                  value="12:30"
+                  type="radio"
+                />
+                <label class="time-option" for="lecture-time-3">12:30</label>
+                <input
+                  id="lecture-time-4"
+                  name="lecture-time"
+                  value="14:30"
+                  type="radio"
+                />
+                <label class="time-option" for="lecture-time-4">14:30</label>
+                <input
+                  id="lecture-time-5"
+                  name="lecture-time"
+                  value="16:30"
+                  type="radio"
+                />
+                <label class="time-option" for="lecture-time-5">16:30</label>
+                <input
+                  id="lecture-time-6"
+                  name="lecture-time"
+                  value="18:30"
+                  type="radio"
+                />
+                <label class="time-option" for="lecture-time-6">18:30</label>
+                <span class="time-background"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="room-switch-row">
+                <input
+                  type="text"
+                  id="lecture-room"
+                  placeholder="Room number"
+                  class="form-input"
+                />
+                <div
+                  class="tri-switch"
+                  id="lecture-room-switch"
+                  role="radiogroup"
+                  aria-label="Room availability"
+                >
+                  <button
+                    class="tri-option"
+                    data-value="unavailable"
+                    aria-pressed="false"
+                    title="Unavailable"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6 6l12 12M6 18L18 6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="tri-option"
+                    data-value="unknown"
+                    aria-pressed="false"
+                    title="Unknown"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6 12h12"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="tri-option active"
+                    data-value="available"
+                    aria-pressed="true"
+                    title="Available"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M20 6L9 17l-5-5"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <span class="tri-background"></span>
+                </div>
+              </div>
+            </div>
+            <button id="add-lecture-btn" class="add-entry-btn">
+              Add Lecture
+            </button>
+          </div>
+          <div id="sections-tab" class="tab-content">
+            <div class="form-group">
+              <div id="section-day-switch" class="day-switch">
+                <input
+                  checked
+                  id="section-sat"
+                  name="section-day"
+                  value="Sat"
+                  type="radio"
+                />
+                <label class="day-option" for="section-sat">Sat</label>
+                <input
+                  id="section-sun"
+                  name="section-day"
+                  value="Sun"
+                  type="radio"
+                />
+                <label class="day-option" for="section-sun">Sun</label>
+                <input
+                  id="section-mon"
+                  name="section-day"
+                  value="Mon"
+                  type="radio"
+                />
+                <label class="day-option" for="section-mon">Mon</label>
+                <input
+                  id="section-tue"
+                  name="section-day"
+                  value="Tue"
+                  type="radio"
+                />
+                <label class="day-option" for="section-tue">Tue</label>
+                <input
+                  id="section-wed"
+                  name="section-day"
+                  value="Wed"
+                  type="radio"
+                />
+                <label class="day-option" for="section-wed">Wed</label>
+                <input
+                  id="section-thu"
+                  name="section-day"
+                  value="Thu"
+                  type="radio"
+                />
+                <label class="day-option" for="section-thu">Thu</label>
+                <div class="day-background"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div id="section-time-switch" class="time-switch">
+                <input
+                  checked
+                  id="section-time-1"
+                  name="section-time"
+                  value="8:30"
+                  type="radio"
+                />
+                <label class="time-option" for="section-time-1">8:30</label>
+                <input
+                  id="section-time-2"
+                  name="section-time"
+                  value="10:30"
+                  type="radio"
+                />
+                <label class="time-option" for="section-time-2">10:30</label>
+                <input
+                  id="section-time-3"
+                  name="section-time"
+                  value="12:30"
+                  type="radio"
+                />
+                <label class="time-option" for="section-time-3">12:30</label>
+                <input
+                  id="section-time-4"
+                  name="section-time"
+                  value="14:30"
+                  type="radio"
+                />
+                <label class="time-option" for="section-time-4">14:30</label>
+                <input
+                  id="section-time-5"
+                  name="section-time"
+                  value="16:30"
+                  type="radio"
+                />
+                <label class="time-option" for="section-time-5">16:30</label>
+                <input
+                  id="section-time-6"
+                  name="section-time"
+                  value="18:30"
+                  type="radio"
+                />
+                <label class="time-option" for="section-time-6">18:30</label>
+                <span class="time-background"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="room-switch-row">
+                <input
+                  type="text"
+                  id="section-room"
+                  placeholder="Room number"
+                  class="form-input"
+                />
+                <div
+                  class="tri-switch"
+                  id="section-room-switch"
+                  role="radiogroup"
+                  aria-label="Room availability"
+                >
+                  <button
+                    class="tri-option"
+                    data-value="unavailable"
+                    aria-pressed="false"
+                    title="Unavailable"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6 6l12 12M6 18L18 6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="tri-option"
+                    data-value="unknown"
+                    aria-pressed="false"
+                    title="Unknown"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6 12h12"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    class="tri-option active"
+                    data-value="available"
+                    aria-pressed="true"
+                    title="Available"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M20 6L9 17l-5-5"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <span class="tri-background"></span>
+                </div>
+              </div>
+            </div>
+            <button id="add-section-btn" class="add-entry-btn">
+              Add Section
+            </button>
+          </div>
+        </div>
+        <div class="entries-list">
+          <div
+            id="entries-container-lectures"
+            class="entries-subcontainer"
+          ></div>
+          <div
+            id="entries-container-sections"
+            class="entries-subcontainer"
+            style="display: none"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

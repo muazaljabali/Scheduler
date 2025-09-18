@@ -1,1 +1,762 @@
-document.addEventListener("DOMContentLoaded",(()=>{const e=document.getElementById("theme-toggle"),t=document.body,n=()=>{e.innerHTML=t.classList.contains("dark")?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2"/></svg>':'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2"/></svg>'};"dark"===localStorage.getItem("theme")&&t.classList.add("dark"),n(),e.addEventListener("click",(()=>{t.classList.toggle("dark"),n(),localStorage.setItem("theme",t.classList.contains("dark")?"dark":"light")}));document.getElementById("schedule-grid");const s=["Sat","Sun","Mon","Tue","Wed","Thu"];window.renderScheduleGrid=function(){const e=document.getElementById("schedule-grid");if(!e)return;e.innerHTML="";const t=document.createElement("div");t.className="schedule";const n=document.createElement("div");n.className="schedule-row schedule-header";const o=document.createElement("div");o.className="schedule-cell schedule-day-label",o.textContent="",n.appendChild(o);for(let e=510;e<=1110;e+=120){const t=e%60,s=`${Math.floor(e/60)}:${0===t?"00":String(t).padStart(2,"0")}`,o=document.createElement("div");o.className="schedule-cell schedule-hour-label",o.textContent=s,n.appendChild(o)}t.appendChild(n),s.forEach((e=>{const n=document.createElement("div");n.className="schedule-row";const s=document.createElement("div");s.className="schedule-cell schedule-day-label",s.textContent=e,n.appendChild(s);for(let t=510;t<=1110;t+=120){const s=t%60,o=`${Math.floor(t/60)}:${0===s?"00":String(s).padStart(2,"0")}`,l=document.createElement("div");l.className="schedule-cell schedule-slot",l.dataset.day=e,l.dataset.time=o,n.appendChild(l)}t.appendChild(n)})),e.appendChild(t)},window.renderScheduleGrid();const o=document.getElementById("modal-overlay"),l=document.getElementById("add-course-btn"),c=document.getElementById("course-name-input");c.addEventListener("input",(()=>{c.style.borderColor="",c.placeholder="Enter course name"})),l.addEventListener("click",(()=>{if(""===c.value.trim())return c.style.borderColor="red",c.placeholder="Course name is required",void c.focus();const e=c.value.trim();if(h.find((t=>t.name.toLowerCase()===e.toLowerCase())))return c.style.borderColor="red",c.placeholder="Course name already exists",void c.focus();c.style.borderColor="",c.placeholder="Enter course name";const t={id:Date.now(),name:e,lectures:[],sections:[]};h.unshift(t),y=t.id,c.value="",E(),w(),L("lecture-room-switch"),L("section-room-switch"),o.classList.add("show")})),o.addEventListener("click",(e=>{e.target===o&&o.classList.remove("show")}));const d=document.querySelectorAll(".tab-btn"),a=document.querySelectorAll(".tab-content"),r=document.getElementById("entries-container-lectures"),i=document.getElementById("entries-container-sections");d.forEach((e=>{e.addEventListener("click",(()=>{d.forEach((e=>e.classList.remove("active"))),a.forEach((e=>e.classList.remove("active"))),e.classList.add("active");const t=e.dataset.tab;document.getElementById(`${t}-tab`).classList.add("active"),"lectures"===t?(r.style.display="",i.style.display="none"):(r.style.display="none",i.style.display="")}))})),document.getElementById("entries-container");const u=document.getElementById("add-lecture-btn"),m=document.getElementById("add-section-btn");let h=[],y=null;function g(){localStorage.setItem("scheduler_courses",JSON.stringify(h)),localStorage.setItem("scheduler_selected",null!==y?String(y):"")}function v(e){const t=document.getElementById(e);if(!t)return;const n=Array.from(t.querySelectorAll(".tri-option"));n.forEach((e=>{e.addEventListener("click",(()=>{n.forEach((e=>{e.classList.remove("active"),e.setAttribute("aria-pressed","false")})),e.classList.add("active"),e.setAttribute("aria-pressed","true"),w()}))}))}function p(e,t,n){const s=document.createElement("div");s.className="entry-item","Lecture"===e.type?s.classList.add("lecture-entry"):s.classList.add("section-entry");const o=document.createElement("div");o.className="entry-info";const l={Sat:"Saturday",Sun:"Sunday",Mon:"Monday",Tue:"Tuesday",Wed:"Wednesday",Thu:"Thursday"}[e.day]||e.day,c=e.room?` in Room ${e.room}`:"",d=document.createElement("span");d.className="entry-text",d.textContent=`${l} at ${e.time}${c}`,d.style.marginRight="0.8vh",o.appendChild(d);const a=document.createElement("button");return a.className="delete-btn",a.textContent="×",a.addEventListener("click",(()=>{n.splice(t,1),w(),E();const s=h.find((e=>e.id===y));s&&("Lecture"===e.type&&0===s.lectures.length?S("lecture-room-switch"):"Section"===e.type&&0===s.sections.length&&S("section-room-switch")),g()})),s.appendChild(o),s.appendChild(a),s}function f(e){y=e,document.querySelectorAll(".course-item").forEach((e=>{e.classList.remove("selected")}));const t=document.querySelector(`[data-course-id="${e}"]`);t&&t.classList.add("selected"),w();const n=h.find((t=>t.id===e));n&&(0===n.lectures.length&&S("lecture-room-switch"),0===n.sections.length&&S("section-room-switch")),g()}function E(){const e=document.getElementById("courses-list");if(e){if(e.innerHTML="",0===h.length){const t=document.createElement("div");return t.className="empty-courses-message",t.textContent="No courses added yet. Enter a course name above to get started.",void e.appendChild(t)}h.forEach((t=>{const n=document.createElement("div");n.className="course-item",n.dataset.courseId=t.id;const s=document.createElement("div");s.className="course-name",s.textContent=t.name;const l=document.createElement("div");l.className="course-stats",l.textContent=`${t.lectures.length} lectures, ${t.sections.length} sections`;const c=document.createElement("div");c.className="course-actions";const d=document.createElement("button");d.className="course-edit-btn",d.innerHTML='<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">\n        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>\n        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>\n      </svg>',d.addEventListener("click",(()=>(f(t.id),void o.classList.add("show"))));const a=document.createElement("button");a.className="course-delete-btn",a.innerHTML='<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">\n        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>\n      </svg>',a.addEventListener("click",(()=>function(e){h=h.filter((t=>t.id!==e)),y===e&&(y=h.length>0?h[0].id:null),E(),w(),g()}(t.id))),c.appendChild(d),c.appendChild(a),n.appendChild(s),n.appendChild(l),n.appendChild(c),n.addEventListener("click",(e=>{e.target.closest(".course-actions")||f(t.id)})),e.appendChild(n)})),g()}}function w(){if(r.innerHTML="",i.innerHTML="",!y)return;const e=h.find((e=>e.id===y));e&&(e.lectures.forEach(((t,n)=>{const s=p({...t,type:"Lecture"},n,e.lectures);r.appendChild(s)})),e.sections.forEach(((t,n)=>{const s=p({...t,type:"Section"},n,e.sections);i.appendChild(s)}))),g()}function S(e){const t=document.getElementById(e);if(!t)return;t.querySelectorAll(".tri-option").forEach((e=>{e.classList.remove("active"),e.setAttribute("aria-pressed","false")}));const n=t.querySelector('.tri-option[data-value="unavailable"]');n&&(n.classList.add("active"),n.setAttribute("aria-pressed","true"))}function L(e){const t=document.getElementById(e);if(!t)return;t.querySelectorAll(".tri-option").forEach((e=>{e.classList.remove("active"),e.setAttribute("aria-pressed","false")}));const n=t.querySelector('.tri-option[data-value="available"]');n&&(n.classList.add("active"),n.setAttribute("aria-pressed","true"))}!function(){try{const e=JSON.parse(localStorage.getItem("scheduler_courses")||"[]");h=Array.isArray(e)?e:[];const t=localStorage.getItem("scheduler_selected");y=t&&h.some((e=>String(e.id)===t))?Number(t):h[0]?.id??null}catch{h=[],y=null}}(),v("lecture-room-switch"),v("section-room-switch"),u.addEventListener("click",(()=>{if(!y)return void alert("Please select a course first");const e=document.querySelector('input[name="lecture-day"]:checked'),t=e?e.value:"",n=document.querySelector('input[name="lecture-time"]:checked'),s=n?n.value:"",o=document.getElementById("lecture-room").value.trim();if(t&&s){const e=h.find((e=>e.id===y));if(e){const n={day:t,time:s};o&&(n.room=o),e.lectures.unshift(n),E(),w(),g()}const n=document.getElementById("lecture-sat");n&&(n.checked=!0);const l=document.getElementById("lecture-time-1");l&&(l.checked=!0),document.getElementById("lecture-room").value=""}})),m.addEventListener("click",(()=>{if(!y)return void alert("Please select a course first");const e=document.querySelector('input[name="section-day"]:checked'),t=e?e.value:"",n=document.querySelector('input[name="section-time"]:checked'),s=n?n.value:"",o=document.getElementById("section-room").value.trim();if(t&&s){const e=h.find((e=>e.id===y));if(e){const n={day:t,time:s};o&&(n.room=o),e.sections.unshift(n),E(),w(),g()}const n=document.getElementById("section-sat");n&&(n.checked=!0);const l=document.getElementById("section-time-1");l&&(l.checked=!0),document.getElementById("section-room").value=""}})),E(),h.length>0&&!y&&f(h[0].id);const b=document.getElementById("min-days"),I=document.getElementById("max-days"),$=document.getElementById("min-sessions"),x=document.getElementById("max-sessions");function C(){const e=parseInt(b.value),t=parseInt(I.value),n=parseInt($.value),s=parseInt(x.value);e>t&&(b.value=t),t<e&&(I.value=e),n>s&&($.value=s),s<n&&(x.value=n),b.value=Math.max(1,Math.min(6,b.value)),I.value=Math.max(1,Math.min(6,I.value)),$.value=Math.max(1,Math.min(6,$.value)),x.value=Math.max(1,Math.min(6,x.value))}[b,I,$,x].forEach((e=>{e.addEventListener("input",C),e.addEventListener("blur",C)}));const k=document.querySelectorAll(".availability-slot"),N=document.querySelectorAll(".availability-day-header"),_=document.querySelectorAll(".availability-period-header");function B(e){const t=document.querySelectorAll(`.availability-slot[data-day="${e}"]`);return Array.from(t).every((e=>e.classList.contains("disabled")))}function A(e){const t=document.querySelectorAll(`.availability-slot[data-period="${e}"]`);return Array.from(t).every((e=>e.classList.contains("disabled")))}function M(){N.forEach((e=>{const t=e.dataset.day,n=document.querySelector(`.availability-day-header[data-day="${t}"]`);B(t)?n.classList.add("disabled"):n.classList.remove("disabled")})),_.forEach((e=>{const t=e.dataset.period,n=document.querySelector(`.availability-period-header[data-period="${t}"]`);A(t)?n.classList.add("disabled"):n.classList.remove("disabled")}))}k.forEach((e=>{e.addEventListener("click",(()=>{!function(e){e.classList.toggle("disabled")}(e),M()}))})),N.forEach((e=>{e.addEventListener("click",(()=>{const t=e.dataset.day,n=document.querySelectorAll(`.availability-slot[data-day="${t}"]`),s=B(t);n.forEach((e=>{s?e.classList.remove("disabled"):e.classList.add("disabled")})),M()}))})),_.forEach((e=>{e.addEventListener("click",(()=>{const t=e.dataset.period,n=document.querySelectorAll(`.availability-slot[data-period="${t}"]`),s=A(t);n.forEach((e=>{s?e.classList.remove("disabled"):e.classList.add("disabled")})),M()}))})),M(),window.fillScheduleGrid=function(e){"function"==typeof window.renderScheduleGrid&&window.renderScheduleGrid();function t(e){if(!e&&0!==e)return"";const t=String(e).trim(),n=t.split(":");if(0===n.length)return t;const s=parseInt(n[0],10),o=(n[1]||"0").padStart(2,"0");return Number.isNaN(s)?`${n[0]}:${o}`:`${s}:${o}`}document.querySelectorAll(".schedule-cell.schedule-slot").forEach((e=>{e.textContent="",e.className="schedule-cell schedule-slot"})),e.sessions.forEach((e=>{const n=t(e.time);let s=Array.from(document.querySelectorAll(".schedule-cell.schedule-slot")).find((s=>s.dataset.day===e.day&&t(s.dataset.time)===n));if(!s){const n=String(e.time).split(":").slice(0,2).join(":");s=Array.from(document.querySelectorAll(".schedule-cell.schedule-slot")).find((s=>s.dataset.day===e.day&&t(s.dataset.time)===t(n)))}if(!s)return;const o=e.courseName,l=e.room?`<div class="session-room">Room ${e.room}</div>`:"";s.innerHTML=`<div class="session-course">${o}</div>${l}`,s.className="schedule-cell schedule-slot filled","Lecture"===e.type?s.classList.add("lecture-session"):"Section"===e.type&&s.classList.add("section-session"),s.title=`${e.courseName} - ${e.type}${e.room?`\nRoom: ${e.room}`:""}\n${e.day} ${e.time}`}))},document.getElementById("generate-btn").addEventListener("click",(()=>{window.__schedules=window.__schedules||[],window.__currentScheduleIndex=0;const e=h.map((e=>{const t=document.querySelector('#lecture-room-switch .tri-option[aria-pressed="true"]'),n=document.querySelector('#section-room-switch .tri-option[aria-pressed="true"]'),s=t?"unavailable"===t.dataset.value?"not required":"unknown"===t.dataset.value?"optional":"required":"required",o=n?"unavailable"===n.dataset.value?"not required":"unknown"===n.dataset.value?"optional":"required":"required",l=0===e.lectures.length?"not required":s,c=0===e.sections.length?"not required":o;return{name:e.name,lectures:e.lectures.map((e=>({day:e.day,time:e.time,room:e.room||null}))),sections:e.sections.map((e=>({day:e.day,time:e.time,room:e.room||null}))),roomPreferences:{lectures:l,sections:c}}})),t={minDays:parseInt(document.getElementById("min-days").value)||1,maxDays:parseInt(document.getElementById("max-days").value)||6,minSessionsPerDay:parseInt(document.getElementById("min-sessions").value)||1,maxSessionsPerDay:parseInt(document.getElementById("max-sessions").value)||6},n=[];document.querySelectorAll(".availability-slot:not(.disabled)").forEach((e=>{n.push({day:e.dataset.day,period:e.dataset.period})}));const s={courses:e,constraints:t,availability:n};let o="=== COLLECTED SCHEDULER DATA ===\n\n";if(o+="COURSES:\n",0===e.length?o+="No courses added yet.\n\n":e.forEach(((e,t)=>{o+=`${t+1}. ${e.name}\n`,o+=`   Room Requirements: Lectures=${e.roomPreferences.lectures}, Sections=${e.roomPreferences.sections}\n`,e.lectures.length>0?(o+="   Lectures:\n",e.lectures.forEach((e=>{o+=`     - ${e.day} ${e.time}${e.room?` (Room: ${e.room})`:""}\n`}))):o+="   Lectures: None\n",e.sections.length>0?(o+="   Sections:\n",e.sections.forEach((e=>{o+=`     - ${e.day} ${e.time}${e.room?` (Room: ${e.room})`:""}\n`}))):o+="   Sections: None\n",o+="\n"})),o+="CONSTRAINTS:\n",o+=`Min Days/Week: ${t.minDays}\n`,o+=`Max Days/Week: ${t.maxDays}\n`,o+=`Min Sessions/Day: ${t.minSessionsPerDay}\n`,o+=`Max Sessions/Day: ${t.maxSessionsPerDay}\n\n`,o+="AVAILABILITY:\n",0===n.length)o+="No availability slots selected.\n";else{["Sat","Sun","Mon","Tue","Wed","Thu"].forEach((e=>{const t=n.filter((t=>t.day===e));t.length>0&&(o+=`${e}: ${t.map((e=>e.period)).join(", ")}\n`)}))}o+="\n=== END OF DATA ===";const l=function(e,t,n){const s=[];function o(e){return n.some((t=>t.day===e.day&&t.period===e.time))}const l=e.map((e=>function(e){const t=[];return e.lectures.length>0&&0===e.sections.length?(e.lectures.forEach((n=>{t.push({courseName:e.name,lecture:n,section:null,sessions:[{...n,type:"Lecture",courseName:e.name}]})})),t):e.sections.length>0&&0===e.lectures.length?(e.sections.forEach((n=>{t.push({courseName:e.name,lecture:null,section:n,sessions:[{...n,type:"Section",courseName:e.name}]})})),t):(e.lectures.length>0&&e.sections.length>0&&e.lectures.forEach((n=>{e.sections.forEach((s=>{t.push({courseName:e.name,lecture:n,section:s,sessions:[{...n,type:"Lecture",courseName:e.name},{...s,type:"Section",courseName:e.name}]})}))})),t)}(e)));return function e(n,c,d){if(n===l.length){const e=c.flatMap((e=>e.sessions));if(0===e.length)return;for(let t=0;t<e.length;t++)for(let n=t+1;n<e.length;n++)if(a=e[t],r=e[n],a.day===r.day&&a.time===r.time)return;for(const t of e)if(!o(t))return;const n=new Set(e.map((e=>e.day))).size,l={};if(e.forEach((e=>{l[e.day]=(l[e.day]||0)+1})),n<t.minDays||n>t.maxDays)return;if(Math.max(...Object.values(l))>t.maxSessionsPerDay)return;return void s.push({sessions:e,daysUsed:n,totalSessions:e.length,sessionsPerDay:Object.values(l).join("/")})}var a,r;const i=l[n];0===i.length?e(n+1,c,d):i.forEach((t=>{e(n+1,[...c,t],d)}))}(0,[],new Set),s}(e,t,n);window.__schedules=l,window.__currentScheduleIndex=0,o+="\n\n=== GENERATED SCHEDULES ===\n",o+=`Total possible schedules: ${l.length}\n\n`,0===l.length?o+="No valid schedules found with current constraints.\n":l.forEach(((e,t)=>{o+=`SCHEDULE ${t+1}:\n`,o+=`Days used: ${e.daysUsed}\n`,o+=`Total sessions: ${e.totalSessions}\n`,o+=`Sessions per day: ${e.sessionsPerDay}\n\n`,e.sessions.forEach((e=>{o+=`${e.courseName} - ${e.type}: ${e.day} ${e.time}`,e.room&&(o+=` (Room: ${e.room})`),o+="\n"})),o+="\n"})),console.log("Collected data:",s),console.log("Generated schedules:",l),console.log("Number of schedules:",l.length);const c=h.map((e=>({name:e.name,lectures:e.lectures.length,sections:e.sections.length})));console.log("Course breakdown:",c);const d=document.getElementById("schedule-status-text"),a=document.getElementById("schedule-nav"),r=document.getElementById("schedule-index");if(l.length>0){console.log("schedule-status:",document.getElementById("schedule-status")),console.log("schedule-nav:",document.getElementById("schedule-nav")),console.log("schedule-grid:",document.getElementById("schedule-grid")),fillScheduleGrid(l[0]);l[0].sessions.length;d&&(d.innerHTML=`<strong>${l.length}</strong> schedule${1!==l.length?"s":""} generated.`),a&&r&&(a.style.display=(l.length,"flex"),r.textContent=`1/${l.length}`),a&&(a.style.display="flex");const e=document.getElementById("schedule-grid");e&&(e.style.display="block")}else{d&&(d.innerHTML='<span style="color:#b91c1c;">No valid schedules found. Adjust constraints, add sessions, or enable more availability.</span>'),a&&(a.style.display="flex"),r&&(r.textContent="-/-");const e=document.getElementById("schedule-grid");e&&(e.style.display="block");document.querySelectorAll(".schedule-cell.schedule-slot").forEach((e=>{e.textContent="",e.className="schedule-cell schedule-slot"}))}}))})),document.addEventListener("click",(e=>{const t=e.target;if(window.__schedules&&Array.isArray(window.__schedules)&&0!==window.__schedules.length)if(t&&"prev-schedule"===t.id){window.__currentScheduleIndex=(window.__currentScheduleIndex-1+window.__schedules.length)%window.__schedules.length,fillScheduleGrid(window.__schedules[window.__currentScheduleIndex]);const e=document.getElementById("schedule-index");e&&(e.textContent=`${window.__currentScheduleIndex+1}/${window.__schedules.length}`)}else if(t&&"next-schedule"===t.id){window.__currentScheduleIndex=(window.__currentScheduleIndex+1)%window.__schedules.length,fillScheduleGrid(window.__schedules[window.__currentScheduleIndex]);const e=document.getElementById("schedule-index");e&&(e.textContent=`${window.__currentScheduleIndex+1}/${window.__schedules.length}`)}})),"undefined"!=typeof window&&(window.fillScheduleGrid=fillScheduleGrid,window.normalizeTimeForGrid=function(e){if(!e&&0!==e)return"";const t=String(e).trim().split(":"),n=parseInt(t[0],10),s=(t[1]||"0").padStart(2,"0");return Number.isNaN(n)?`${t[0]}:${s}`:`${n}:${s}`},window.logAvailableGridSlots=function(){const e=document.querySelectorAll(".schedule-cell.schedule-slot");console.log("Total grid slots:",e.length),console.table(Array.from(e).map((e=>({day:e.dataset.day,time:e.dataset.time}))))});
+document.addEventListener("DOMContentLoaded", () => {
+  const e = document.getElementById("theme-toggle"),
+    t = document.body,
+    n = () => {
+      e.innerHTML = t.classList.contains("dark")
+        ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2"/></svg>'
+        : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2"/></svg>';
+    };
+  "dark" === localStorage.getItem("theme") && t.classList.add("dark"),
+    n(),
+    e.addEventListener("click", () => {
+      t.classList.toggle("dark"),
+        n(),
+        localStorage.setItem(
+          "theme",
+          t.classList.contains("dark") ? "dark" : "light"
+        );
+    });
+  document.getElementById("schedule-grid");
+  const s = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu"];
+  (window.renderScheduleGrid = function () {
+    const e = document.getElementById("schedule-grid");
+    if (!e) return;
+    e.innerHTML = "";
+    const t = document.createElement("div");
+    t.className = "schedule";
+    const n = document.createElement("div");
+    n.className = "schedule-row schedule-header";
+    const o = document.createElement("div");
+    (o.className = "schedule-cell schedule-day-label"),
+      (o.textContent = ""),
+      n.appendChild(o);
+    for (let e = 510; e <= 1110; e += 120) {
+      const t = e % 60,
+        s = `${Math.floor(e / 60)}:${
+          0 === t ? "00" : String(t).padStart(2, "0")
+        }`,
+        o = document.createElement("div");
+      (o.className = "schedule-cell schedule-hour-label"),
+        (o.textContent = s),
+        n.appendChild(o);
+    }
+    t.appendChild(n),
+      s.forEach((e) => {
+        const n = document.createElement("div");
+        n.className = "schedule-row";
+        const s = document.createElement("div");
+        (s.className = "schedule-cell schedule-day-label"),
+          (s.textContent = e),
+          n.appendChild(s);
+        for (let t = 510; t <= 1110; t += 120) {
+          const s = t % 60,
+            o = `${Math.floor(t / 60)}:${
+              0 === s ? "00" : String(s).padStart(2, "0")
+            }`,
+            l = document.createElement("div");
+          (l.className = "schedule-cell schedule-slot"),
+            (l.dataset.day = e),
+            (l.dataset.time = o),
+            n.appendChild(l);
+        }
+        t.appendChild(n);
+      }),
+      e.appendChild(t);
+  }),
+    window.renderScheduleGrid();
+  const o = document.getElementById("modal-overlay"),
+    l = document.getElementById("add-course-btn"),
+    c = document.getElementById("course-name-input");
+  c.addEventListener("input", () => {
+    (c.style.borderColor = ""), (c.placeholder = "Enter course name");
+  }),
+    l.addEventListener("click", () => {
+      if ("" === c.value.trim())
+        return (
+          (c.style.borderColor = "red"),
+          (c.placeholder = "Course name is required"),
+          void c.focus()
+        );
+      const e = c.value.trim();
+      if (h.find((t) => t.name.toLowerCase() === e.toLowerCase()))
+        return (
+          (c.style.borderColor = "red"),
+          (c.placeholder = "Course name already exists"),
+          void c.focus()
+        );
+      (c.style.borderColor = ""), (c.placeholder = "Enter course name");
+      const t = { id: Date.now(), name: e, lectures: [], sections: [] };
+      h.unshift(t),
+        (y = t.id),
+        (c.value = ""),
+        E(),
+        w(),
+        L("lecture-room-switch"),
+        L("section-room-switch"),
+        o.classList.add("show");
+    }),
+    o.addEventListener("click", (e) => {
+      e.target === o && o.classList.remove("show");
+    });
+  const d = document.querySelectorAll(".tab-btn"),
+    a = document.querySelectorAll(".tab-content"),
+    r = document.getElementById("entries-container-lectures"),
+    i = document.getElementById("entries-container-sections");
+  d.forEach((e) => {
+    e.addEventListener("click", () => {
+      d.forEach((e) => e.classList.remove("active")),
+        a.forEach((e) => e.classList.remove("active")),
+        e.classList.add("active");
+      const t = e.dataset.tab;
+      document.getElementById(`${t}-tab`).classList.add("active"),
+        "lectures" === t
+          ? ((r.style.display = ""), (i.style.display = "none"))
+          : ((r.style.display = "none"), (i.style.display = ""));
+    });
+  }),
+    document.getElementById("entries-container");
+  const u = document.getElementById("add-lecture-btn"),
+    m = document.getElementById("add-section-btn");
+  let h = [],
+    y = null;
+  function g() {
+    localStorage.setItem("scheduler_courses", JSON.stringify(h)),
+      localStorage.setItem("scheduler_selected", null !== y ? String(y) : "");
+  }
+  function v(e) {
+    const t = document.getElementById(e);
+    if (!t) return;
+    const n = Array.from(t.querySelectorAll(".tri-option"));
+    n.forEach((e) => {
+      e.addEventListener("click", () => {
+        n.forEach((e) => {
+          e.classList.remove("active"), e.setAttribute("aria-pressed", "false");
+        }),
+          e.classList.add("active"),
+          e.setAttribute("aria-pressed", "true"),
+          w();
+      });
+    });
+  }
+  function p(e, t, n) {
+    const s = document.createElement("div");
+    (s.className = "entry-item"),
+      "Lecture" === e.type
+        ? s.classList.add("lecture-entry")
+        : s.classList.add("section-entry");
+    const o = document.createElement("div");
+    o.className = "entry-info";
+    const l =
+        {
+          Sat: "Saturday",
+          Sun: "Sunday",
+          Mon: "Monday",
+          Tue: "Tuesday",
+          Wed: "Wednesday",
+          Thu: "Thursday",
+        }[e.day] || e.day,
+      c = e.room ? ` in Room ${e.room}` : "",
+      d = document.createElement("span");
+    (d.className = "entry-text"),
+      (d.textContent = `${l} at ${e.time}${c}`),
+      (d.style.marginRight = "0.8vh"),
+      o.appendChild(d);
+    const a = document.createElement("button");
+    return (
+      (a.className = "delete-btn"),
+      (a.textContent = "×"),
+      a.addEventListener("click", () => {
+        n.splice(t, 1), w(), E();
+        const s = h.find((e) => e.id === y);
+        s &&
+          ("Lecture" === e.type && 0 === s.lectures.length
+            ? S("lecture-room-switch")
+            : "Section" === e.type &&
+              0 === s.sections.length &&
+              S("section-room-switch")),
+          g();
+      }),
+      s.appendChild(o),
+      s.appendChild(a),
+      s
+    );
+  }
+  function f(e) {
+    (y = e),
+      document.querySelectorAll(".course-item").forEach((e) => {
+        e.classList.remove("selected");
+      });
+    const t = document.querySelector(`[data-course-id="${e}"]`);
+    t && t.classList.add("selected"), w();
+    const n = h.find((t) => t.id === e);
+    n &&
+      (0 === n.lectures.length && S("lecture-room-switch"),
+      0 === n.sections.length && S("section-room-switch")),
+      g();
+  }
+  function E() {
+    const e = document.getElementById("courses-list");
+    if (e) {
+      if (((e.innerHTML = ""), 0 === h.length)) {
+        const t = document.createElement("div");
+        return (
+          (t.className = "empty-courses-message"),
+          (t.textContent =
+            "No courses added yet. Enter a course name above to get started."),
+          void e.appendChild(t)
+        );
+      }
+      h.forEach((t) => {
+        const n = document.createElement("div");
+        (n.className = "course-item"), (n.dataset.courseId = t.id);
+        const s = document.createElement("div");
+        (s.className = "course-name"), (s.textContent = t.name);
+        const l = document.createElement("div");
+        (l.className = "course-stats"),
+          (l.textContent = `${t.lectures.length} lectures, ${t.sections.length} sections`);
+        const c = document.createElement("div");
+        c.className = "course-actions";
+        const d = document.createElement("button");
+        (d.className = "course-edit-btn"),
+          (d.innerHTML =
+            '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">\n        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>\n        <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>\n      </svg>'),
+          d.addEventListener(
+            "click",
+            () => (f(t.id), void o.classList.add("show"))
+          );
+        const a = document.createElement("button");
+        (a.className = "course-delete-btn"),
+          (a.innerHTML =
+            '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">\n        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>\n      </svg>'),
+          a.addEventListener("click", () =>
+            (function (e) {
+              (h = h.filter((t) => t.id !== e)),
+                y === e && (y = h.length > 0 ? h[0].id : null),
+                E(),
+                w(),
+                g();
+            })(t.id)
+          ),
+          c.appendChild(d),
+          c.appendChild(a),
+          n.appendChild(s),
+          n.appendChild(l),
+          n.appendChild(c),
+          n.addEventListener("click", (e) => {
+            e.target.closest(".course-actions") || f(t.id);
+          }),
+          e.appendChild(n);
+      }),
+        g();
+    }
+  }
+  function w() {
+    if (((r.innerHTML = ""), (i.innerHTML = ""), !y)) return;
+    const e = h.find((e) => e.id === y);
+    e &&
+      (e.lectures.forEach((t, n) => {
+        const s = p({ ...t, type: "Lecture" }, n, e.lectures);
+        r.appendChild(s);
+      }),
+      e.sections.forEach((t, n) => {
+        const s = p({ ...t, type: "Section" }, n, e.sections);
+        i.appendChild(s);
+      })),
+      g();
+  }
+  function S(e) {
+    const t = document.getElementById(e);
+    if (!t) return;
+    t.querySelectorAll(".tri-option").forEach((e) => {
+      e.classList.remove("active"), e.setAttribute("aria-pressed", "false");
+    });
+    const n = t.querySelector('.tri-option[data-value="unavailable"]');
+    n && (n.classList.add("active"), n.setAttribute("aria-pressed", "true"));
+  }
+  function L(e) {
+    const t = document.getElementById(e);
+    if (!t) return;
+    t.querySelectorAll(".tri-option").forEach((e) => {
+      e.classList.remove("active"), e.setAttribute("aria-pressed", "false");
+    });
+    const n = t.querySelector('.tri-option[data-value="available"]');
+    n && (n.classList.add("active"), n.setAttribute("aria-pressed", "true"));
+  }
+  !(function () {
+    try {
+      const e = JSON.parse(localStorage.getItem("scheduler_courses") || "[]");
+      h = Array.isArray(e) ? e : [];
+      const t = localStorage.getItem("scheduler_selected");
+      y = t && h.some((e) => String(e.id) === t) ? Number(t) : h[0]?.id ?? null;
+    } catch {
+      (h = []), (y = null);
+    }
+  })(),
+    v("lecture-room-switch"),
+    v("section-room-switch"),
+    u.addEventListener("click", () => {
+      if (!y) return void alert("Please select a course first");
+      const e = document.querySelector('input[name="lecture-day"]:checked'),
+        t = e ? e.value : "",
+        n = document.querySelector('input[name="lecture-time"]:checked'),
+        s = n ? n.value : "",
+        o = document.getElementById("lecture-room").value.trim();
+      if (t && s) {
+        const e = h.find((e) => e.id === y);
+        if (e) {
+          const n = { day: t, time: s };
+          o && (n.room = o), e.lectures.unshift(n), E(), w(), g();
+        }
+        const n = document.getElementById("lecture-sat");
+        n && (n.checked = !0);
+        const l = document.getElementById("lecture-time-1");
+        l && (l.checked = !0),
+          (document.getElementById("lecture-room").value = "");
+      }
+    }),
+    m.addEventListener("click", () => {
+      if (!y) return void alert("Please select a course first");
+      const e = document.querySelector('input[name="section-day"]:checked'),
+        t = e ? e.value : "",
+        n = document.querySelector('input[name="section-time"]:checked'),
+        s = n ? n.value : "",
+        o = document.getElementById("section-room").value.trim();
+      if (t && s) {
+        const e = h.find((e) => e.id === y);
+        if (e) {
+          const n = { day: t, time: s };
+          o && (n.room = o), e.sections.unshift(n), E(), w(), g();
+        }
+        const n = document.getElementById("section-sat");
+        n && (n.checked = !0);
+        const l = document.getElementById("section-time-1");
+        l && (l.checked = !0),
+          (document.getElementById("section-room").value = "");
+      }
+    }),
+    E(),
+    h.length > 0 && !y && f(h[0].id);
+  const b = document.getElementById("min-days"),
+    I = document.getElementById("max-days"),
+    $ = document.getElementById("min-sessions"),
+    x = document.getElementById("max-sessions");
+  function C() {
+    const e = parseInt(b.value),
+      t = parseInt(I.value),
+      n = parseInt($.value),
+      s = parseInt(x.value);
+    e > t && (b.value = t),
+      t < e && (I.value = e),
+      n > s && ($.value = s),
+      s < n && (x.value = n),
+      (b.value = Math.max(1, Math.min(6, b.value))),
+      (I.value = Math.max(1, Math.min(6, I.value))),
+      ($.value = Math.max(1, Math.min(6, $.value))),
+      (x.value = Math.max(1, Math.min(6, x.value)));
+  }
+  [b, I, $, x].forEach((e) => {
+    e.addEventListener("input", C), e.addEventListener("blur", C);
+  });
+  const k = document.querySelectorAll(".availability-slot"),
+    N = document.querySelectorAll(".availability-day-header"),
+    _ = document.querySelectorAll(".availability-period-header");
+  function B(e) {
+    const t = document.querySelectorAll(`.availability-slot[data-day="${e}"]`);
+    return Array.from(t).every((e) => e.classList.contains("disabled"));
+  }
+  function A(e) {
+    const t = document.querySelectorAll(
+      `.availability-slot[data-period="${e}"]`
+    );
+    return Array.from(t).every((e) => e.classList.contains("disabled"));
+  }
+  function M() {
+    N.forEach((e) => {
+      const t = e.dataset.day,
+        n = document.querySelector(`.availability-day-header[data-day="${t}"]`);
+      B(t) ? n.classList.add("disabled") : n.classList.remove("disabled");
+    }),
+      _.forEach((e) => {
+        const t = e.dataset.period,
+          n = document.querySelector(
+            `.availability-period-header[data-period="${t}"]`
+          );
+        A(t) ? n.classList.add("disabled") : n.classList.remove("disabled");
+      });
+  }
+  k.forEach((e) => {
+    e.addEventListener("click", () => {
+      !(function (e) {
+        e.classList.toggle("disabled");
+      })(e),
+        M();
+    });
+  }),
+    N.forEach((e) => {
+      e.addEventListener("click", () => {
+        const t = e.dataset.day,
+          n = document.querySelectorAll(`.availability-slot[data-day="${t}"]`),
+          s = B(t);
+        n.forEach((e) => {
+          s ? e.classList.remove("disabled") : e.classList.add("disabled");
+        }),
+          M();
+      });
+    }),
+    _.forEach((e) => {
+      e.addEventListener("click", () => {
+        const t = e.dataset.period,
+          n = document.querySelectorAll(
+            `.availability-slot[data-period="${t}"]`
+          ),
+          s = A(t);
+        n.forEach((e) => {
+          s ? e.classList.remove("disabled") : e.classList.add("disabled");
+        }),
+          M();
+      });
+    }),
+    M(),
+    (window.fillScheduleGrid = function (e) {
+      "function" == typeof window.renderScheduleGrid &&
+        window.renderScheduleGrid();
+      function t(e) {
+        if (!e && 0 !== e) return "";
+        const t = String(e).trim(),
+          n = t.split(":");
+        if (0 === n.length) return t;
+        const s = parseInt(n[0], 10),
+          o = (n[1] || "0").padStart(2, "0");
+        return Number.isNaN(s) ? `${n[0]}:${o}` : `${s}:${o}`;
+      }
+      document.querySelectorAll(".schedule-cell.schedule-slot").forEach((e) => {
+        (e.textContent = ""), (e.className = "schedule-cell schedule-slot");
+      }),
+        e.sessions.forEach((e) => {
+          const n = t(e.time);
+          let s = Array.from(
+            document.querySelectorAll(".schedule-cell.schedule-slot")
+          ).find((s) => s.dataset.day === e.day && t(s.dataset.time) === n);
+          if (!s) {
+            const n = String(e.time).split(":").slice(0, 2).join(":");
+            s = Array.from(
+              document.querySelectorAll(".schedule-cell.schedule-slot")
+            ).find(
+              (s) => s.dataset.day === e.day && t(s.dataset.time) === t(n)
+            );
+          }
+          if (!s) return;
+          const o = e.courseName,
+            l = e.room ? `<div class="session-room">Room ${e.room}</div>` : "";
+          (s.innerHTML = `<div class="session-course">${o}</div>${l}`),
+            (s.className = "schedule-cell schedule-slot filled"),
+            "Lecture" === e.type
+              ? s.classList.add("lecture-session")
+              : "Section" === e.type && s.classList.add("section-session"),
+            (s.title = `${e.courseName} - ${e.type}${
+              e.room ? `\nRoom: ${e.room}` : ""
+            }\n${e.day} ${e.time}`);
+        });
+    }),
+    document.getElementById("generate-btn").addEventListener("click", () => {
+      (window.__schedules = window.__schedules || []),
+        (window.__currentScheduleIndex = 0);
+      const e = h.map((e) => {
+          const t = document.querySelector(
+              '#lecture-room-switch .tri-option[aria-pressed="true"]'
+            ),
+            n = document.querySelector(
+              '#section-room-switch .tri-option[aria-pressed="true"]'
+            ),
+            s = t
+              ? "unavailable" === t.dataset.value
+                ? "not required"
+                : "unknown" === t.dataset.value
+                ? "optional"
+                : "required"
+              : "required",
+            o = n
+              ? "unavailable" === n.dataset.value
+                ? "not required"
+                : "unknown" === n.dataset.value
+                ? "optional"
+                : "required"
+              : "required",
+            l = 0 === e.lectures.length ? "not required" : s,
+            c = 0 === e.sections.length ? "not required" : o;
+          return {
+            name: e.name,
+            lectures: e.lectures.map((e) => ({
+              day: e.day,
+              time: e.time,
+              room: e.room || null,
+            })),
+            sections: e.sections.map((e) => ({
+              day: e.day,
+              time: e.time,
+              room: e.room || null,
+            })),
+            roomPreferences: { lectures: l, sections: c },
+          };
+        }),
+        t = {
+          minDays: parseInt(document.getElementById("min-days").value) || 1,
+          maxDays: parseInt(document.getElementById("max-days").value) || 6,
+          minSessionsPerDay:
+            parseInt(document.getElementById("min-sessions").value) || 1,
+          maxSessionsPerDay:
+            parseInt(document.getElementById("max-sessions").value) || 6,
+        },
+        n = [];
+      document
+        .querySelectorAll(".availability-slot:not(.disabled)")
+        .forEach((e) => {
+          n.push({ day: e.dataset.day, period: e.dataset.period });
+        });
+      const s = { courses: e, constraints: t, availability: n };
+      let o = "=== COLLECTED SCHEDULER DATA ===\n\n";
+      if (
+        ((o += "COURSES:\n"),
+        0 === e.length
+          ? (o += "No courses added yet.\n\n")
+          : e.forEach((e, t) => {
+              (o += `${t + 1}. ${e.name}\n`),
+                (o += `   Room Requirements: Lectures=${e.roomPreferences.lectures}, Sections=${e.roomPreferences.sections}\n`),
+                e.lectures.length > 0
+                  ? ((o += "   Lectures:\n"),
+                    e.lectures.forEach((e) => {
+                      o += `     - ${e.day} ${e.time}${
+                        e.room ? ` (Room: ${e.room})` : ""
+                      }\n`;
+                    }))
+                  : (o += "   Lectures: None\n"),
+                e.sections.length > 0
+                  ? ((o += "   Sections:\n"),
+                    e.sections.forEach((e) => {
+                      o += `     - ${e.day} ${e.time}${
+                        e.room ? ` (Room: ${e.room})` : ""
+                      }\n`;
+                    }))
+                  : (o += "   Sections: None\n"),
+                (o += "\n");
+            }),
+        (o += "CONSTRAINTS:\n"),
+        (o += `Min Days/Week: ${t.minDays}\n`),
+        (o += `Max Days/Week: ${t.maxDays}\n`),
+        (o += `Min Sessions/Day: ${t.minSessionsPerDay}\n`),
+        (o += `Max Sessions/Day: ${t.maxSessionsPerDay}\n\n`),
+        (o += "AVAILABILITY:\n"),
+        0 === n.length)
+      )
+        o += "No availability slots selected.\n";
+      else {
+        ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu"].forEach((e) => {
+          const t = n.filter((t) => t.day === e);
+          t.length > 0 && (o += `${e}: ${t.map((e) => e.period).join(", ")}\n`);
+        });
+      }
+      o += "\n=== END OF DATA ===";
+      const l = (function (e, t, n) {
+        const s = [];
+        function o(e) {
+          return n.some((t) => t.day === e.day && t.period === e.time);
+        }
+        const l = e.map((e) =>
+          (function (e) {
+            const t = [];
+            return e.lectures.length > 0 && 0 === e.sections.length
+              ? (e.lectures.forEach((n) => {
+                  t.push({
+                    courseName: e.name,
+                    lecture: n,
+                    section: null,
+                    sessions: [{ ...n, type: "Lecture", courseName: e.name }],
+                  });
+                }),
+                t)
+              : e.sections.length > 0 && 0 === e.lectures.length
+              ? (e.sections.forEach((n) => {
+                  t.push({
+                    courseName: e.name,
+                    lecture: null,
+                    section: n,
+                    sessions: [{ ...n, type: "Section", courseName: e.name }],
+                  });
+                }),
+                t)
+              : (e.lectures.length > 0 &&
+                  e.sections.length > 0 &&
+                  e.lectures.forEach((n) => {
+                    e.sections.forEach((s) => {
+                      t.push({
+                        courseName: e.name,
+                        lecture: n,
+                        section: s,
+                        sessions: [
+                          { ...n, type: "Lecture", courseName: e.name },
+                          { ...s, type: "Section", courseName: e.name },
+                        ],
+                      });
+                    });
+                  }),
+                t);
+          })(e)
+        );
+        return (
+          (function e(n, c, d) {
+            if (n === l.length) {
+              const e = c.flatMap((e) => e.sessions);
+              if (0 === e.length) return;
+              for (let t = 0; t < e.length; t++)
+                for (let n = t + 1; n < e.length; n++)
+                  if (
+                    ((a = e[t]),
+                    (r = e[n]),
+                    a.day === r.day && a.time === r.time)
+                  )
+                    return;
+              for (const t of e) if (!o(t)) return;
+              const n = new Set(e.map((e) => e.day)).size,
+                l = {};
+              if (
+                (e.forEach((e) => {
+                  l[e.day] = (l[e.day] || 0) + 1;
+                }),
+                n < t.minDays || n > t.maxDays)
+              )
+                return;
+              if (Math.max(...Object.values(l)) > t.maxSessionsPerDay) return;
+              return void s.push({
+                sessions: e,
+                daysUsed: n,
+                totalSessions: e.length,
+                sessionsPerDay: Object.values(l).join("/"),
+              });
+            }
+            var a, r;
+            const i = l[n];
+            0 === i.length
+              ? e(n + 1, c, d)
+              : i.forEach((t) => {
+                  e(n + 1, [...c, t], d);
+                });
+          })(0, [], new Set()),
+          s
+        );
+      })(e, t, n);
+      (window.__schedules = l),
+        (window.__currentScheduleIndex = 0),
+        (o += "\n\n=== GENERATED SCHEDULES ===\n"),
+        (o += `Total possible schedules: ${l.length}\n\n`),
+        0 === l.length
+          ? (o += "No valid schedules found with current constraints.\n")
+          : l.forEach((e, t) => {
+              (o += `SCHEDULE ${t + 1}:\n`),
+                (o += `Days used: ${e.daysUsed}\n`),
+                (o += `Total sessions: ${e.totalSessions}\n`),
+                (o += `Sessions per day: ${e.sessionsPerDay}\n\n`),
+                e.sessions.forEach((e) => {
+                  (o += `${e.courseName} - ${e.type}: ${e.day} ${e.time}`),
+                    e.room && (o += ` (Room: ${e.room})`),
+                    (o += "\n");
+                }),
+                (o += "\n");
+            }),
+        console.log("Collected data:", s),
+        console.log("Generated schedules:", l),
+        console.log("Number of schedules:", l.length);
+      const c = h.map((e) => ({
+        name: e.name,
+        lectures: e.lectures.length,
+        sections: e.sections.length,
+      }));
+      console.log("Course breakdown:", c);
+      const d = document.getElementById("schedule-status-text"),
+        a = document.getElementById("schedule-nav"),
+        r = document.getElementById("schedule-index");
+      if (l.length > 0) {
+        console.log(
+          "schedule-status:",
+          document.getElementById("schedule-status")
+        ),
+          console.log("schedule-nav:", document.getElementById("schedule-nav")),
+          console.log(
+            "schedule-grid:",
+            document.getElementById("schedule-grid")
+          ),
+          fillScheduleGrid(l[0]);
+        l[0].sessions.length;
+        d &&
+          (d.innerHTML = `<strong>${l.length}</strong> schedule${
+            1 !== l.length ? "s" : ""
+          } generated.`),
+          a &&
+            r &&
+            ((a.style.display = (l.length, "flex")),
+            (r.textContent = `1/${l.length}`)),
+          a && (a.style.display = "flex");
+        const e = document.getElementById("schedule-grid");
+        e && (e.style.display = "block");
+      } else {
+        d &&
+          (d.innerHTML =
+            '<span style="color:#b91c1c;">No valid schedules found. Adjust constraints, add sessions, or enable more availability.</span>'),
+          a && (a.style.display = "flex"),
+          r && (r.textContent = "-/-");
+        const e = document.getElementById("schedule-grid");
+        e && (e.style.display = "block");
+        document
+          .querySelectorAll(".schedule-cell.schedule-slot")
+          .forEach((e) => {
+            (e.textContent = ""), (e.className = "schedule-cell schedule-slot");
+          });
+      }
+    });
+}),
+  document.addEventListener("click", (e) => {
+    const t = e.target;
+    if (
+      window.__schedules &&
+      Array.isArray(window.__schedules) &&
+      0 !== window.__schedules.length
+    )
+      if (t && "prev-schedule" === t.id) {
+        (window.__currentScheduleIndex =
+          (window.__currentScheduleIndex - 1 + window.__schedules.length) %
+          window.__schedules.length),
+          fillScheduleGrid(window.__schedules[window.__currentScheduleIndex]);
+        const e = document.getElementById("schedule-index");
+        e &&
+          (e.textContent = `${window.__currentScheduleIndex + 1}/${
+            window.__schedules.length
+          }`);
+      } else if (t && "next-schedule" === t.id) {
+        (window.__currentScheduleIndex =
+          (window.__currentScheduleIndex + 1) % window.__schedules.length),
+          fillScheduleGrid(window.__schedules[window.__currentScheduleIndex]);
+        const e = document.getElementById("schedule-index");
+        e &&
+          (e.textContent = `${window.__currentScheduleIndex + 1}/${
+            window.__schedules.length
+          }`);
+      }
+  }),
+  "undefined" != typeof window &&
+    ((window.fillScheduleGrid = fillScheduleGrid),
+    (window.normalizeTimeForGrid = function (e) {
+      if (!e && 0 !== e) return "";
+      const t = String(e).trim().split(":"),
+        n = parseInt(t[0], 10),
+        s = (t[1] || "0").padStart(2, "0");
+      return Number.isNaN(n) ? `${t[0]}:${s}` : `${n}:${s}`;
+    }),
+    (window.logAvailableGridSlots = function () {
+      const e = document.querySelectorAll(".schedule-cell.schedule-slot");
+      console.log("Total grid slots:", e.length),
+        console.table(
+          Array.from(e).map((e) => ({
+            day: e.dataset.day,
+            time: e.dataset.time,
+          }))
+        );
+    }));
