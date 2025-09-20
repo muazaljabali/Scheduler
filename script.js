@@ -19,7 +19,7 @@ const icons = {
 };
 function updateNavigation() {
   const e = window.innerWidth;
-  if (((navContainer.innerHTML = ""), e <= 480)) {
+  if (((navContainer.innerHTML = ""), e <= 597)) {
     ["courses", "constraints", "schedules"].forEach((e, t) => {
       const n = document.createElement("button");
       (n.className = `nav-item ${currentPage === e ? "active" : ""}`),

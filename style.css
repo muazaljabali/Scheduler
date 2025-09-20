@@ -134,7 +134,7 @@ body {
   width: 100%;
 }
 .nav-item {
-  background: none;
+  background: 0 0;
   border: none;
   cursor: pointer;
   border-radius: 0.75rem;
@@ -162,75 +162,73 @@ body {
 [data-theme="light"] .nav-item.active svg {
   fill: var(--bg-primary);
 }
-
-@media (min-width: 320px) {
+@media (max-width: 320px) {
   body {
     padding-top: 8vh;
     padding-bottom: 8vh;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
   .title-bar {
     height: 8vh;
-    padding: 0 0.5rem;
+    padding: 0 0.4rem;
   }
   .app-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   .theme-toggle {
-    width: 2.5rem;
-    height: 1.3rem;
+    width: 2.2rem;
+    height: 1.1rem;
   }
   .theme-toggle::after {
-    width: 1rem;
-    height: 1rem;
+    width: 0.9rem;
+    height: 0.9rem;
   }
   [data-theme="dark"] .theme-toggle::after {
-    transform: translateX(1.3rem);
+    transform: translateX(1.1rem);
   }
   .main-content {
-    padding: 0.5rem;
+    padding: 0.3rem;
     min-height: 84vh;
-    width: 95%;
+    width: 98%;
   }
   .page-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
   }
   .page-title {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
   .page-subtitle {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
   .content-grid {
     grid-template-columns: 1fr;
     width: 100%;
   }
   .content-card {
-    padding: 0.8rem;
+    padding: 0.6rem;
   }
   .card-title {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   .card-content {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
   .bottom-nav {
     height: 8vh;
   }
   .nav-container {
-    max-width: 95%;
-    padding: 0 0.5rem;
+    max-width: 98%;
+    padding: 0 0.4rem;
   }
   .nav-item {
-    padding: 0.4rem;
+    padding: 0.3rem;
   }
   .nav-item svg {
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1rem;
+    height: 1rem;
   }
 }
-
-@media (min-width: 375px) {
+@media (min-width: 321px) and (max-width: 375px) {
   body {
     padding-top: 9vh;
     padding-bottom: 9vh;
@@ -296,8 +294,7 @@ body {
     height: 1.3rem;
   }
 }
-
-@media (min-width: 425px) {
+@media (min-width: 376px) and (max-width: 425px) {
   body {
     padding-top: 9.5vh;
     padding-bottom: 9.5vh;
@@ -363,8 +360,7 @@ body {
     height: 1.4rem;
   }
 }
-
-@media (min-width: 768px) {
+@media (min-width: 426px) and (max-width: 597px) {
   body {
     padding-top: 10vh;
     padding-bottom: 10vh;
@@ -430,8 +426,73 @@ body {
     height: 1.5rem;
   }
 }
-
-@media (min-width: 1024px) {
+@media (min-width: 598px) and (max-width: 768px) {
+  body {
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+    font-size: 1.05rem;
+  }
+  .title-bar {
+    height: 10vh;
+    padding: 0 1rem;
+  }
+  .app-title {
+    font-size: 1.4rem;
+  }
+  .theme-toggle {
+    width: 3rem;
+    height: 1.5rem;
+  }
+  .theme-toggle::after {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+  [data-theme="dark"] .theme-toggle::after {
+    transform: translateX(1.5rem);
+  }
+  .main-content {
+    padding: 1rem;
+    min-height: 80vh;
+    width: 90%;
+  }
+  .page-header {
+    margin-bottom: 2rem;
+  }
+  .page-title {
+    font-size: 1.6rem;
+  }
+  .page-subtitle {
+    font-size: 1rem;
+  }
+  .content-grid {
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+  .content-card {
+    padding: 1.1rem;
+  }
+  .card-title {
+    font-size: 1.15rem;
+  }
+  .card-content {
+    font-size: 1rem;
+  }
+  .bottom-nav {
+    height: 10vh;
+  }
+  .nav-container {
+    max-width: 90%;
+    padding: 0 1rem;
+  }
+  .nav-item {
+    padding: 0.55rem;
+  }
+  .nav-item svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
   body {
     padding-top: 10vh;
     padding-bottom: 10vh;
@@ -497,75 +558,7 @@ body {
     height: 1.6rem;
   }
 }
-
-@media (min-width: 1440px) {
-  body {
-    padding-top: 10vh;
-    padding-bottom: 10vh;
-    font-size: 1.15rem;
-  }
-  .title-bar {
-    height: 10vh;
-    padding: 0 1.5rem;
-  }
-  .app-title {
-    font-size: 1.6rem;
-  }
-  .theme-toggle {
-    width: 3.5rem;
-    height: 1.7rem;
-  }
-  .theme-toggle::after {
-    width: 1.4rem;
-    height: 1.4rem;
-  }
-  [data-theme="dark"] .theme-toggle::after {
-    transform: translateX(1.8rem);
-  }
-  .main-content {
-    padding: 1.5rem;
-    min-height: 80vh;
-    width: 80%;
-  }
-  .page-header {
-    margin-bottom: 2.5rem;
-  }
-  .page-title {
-    font-size: 2rem;
-  }
-  .page-subtitle {
-    font-size: 1.1rem;
-  }
-  .content-grid {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    width: 100%;
-  }
-  .content-card {
-    padding: 1.3rem;
-  }
-  .card-title {
-    font-size: 1.25rem;
-  }
-  .card-content {
-    font-size: 1.1rem;
-  }
-  .bottom-nav {
-    height: 10vh;
-  }
-  .nav-container {
-    max-width: 80%;
-    padding: 0 1.5rem;
-  }
-  .nav-item {
-    padding: 0.65rem;
-  }
-  .nav-item svg {
-    width: 1.7rem;
-    height: 1.7rem;
-  }
-}
-
-@media (min-width: 2560px) {
+@media (min-width: 1025px) and (max-width: 2559px) {
   body {
     padding-top: 10vh;
     padding-bottom: 10vh;
@@ -629,5 +622,71 @@ body {
   .nav-item svg {
     width: 1.8rem;
     height: 1.8rem;
+  }
+}
+@media (min-width: 2560px) {
+  body {
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+    font-size: 1.3rem;
+  }
+  .title-bar {
+    height: 10vh;
+    padding: 0 2.5rem;
+  }
+  .app-title {
+    font-size: 2rem;
+  }
+  .theme-toggle {
+    width: 4.5rem;
+    height: 2.2rem;
+  }
+  .theme-toggle::after {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+  [data-theme="dark"] .theme-toggle::after {
+    transform: translateX(2.3rem);
+  }
+  .main-content {
+    padding: 2.5rem;
+    min-height: 80vh;
+    width: 65%;
+  }
+  .page-header {
+    margin-bottom: 3.5rem;
+  }
+  .page-title {
+    font-size: 2.5rem;
+  }
+  .page-subtitle {
+    font-size: 1.3rem;
+  }
+  .content-grid {
+    grid-template-columns: repeat(6, 1fr);
+    width: 100%;
+  }
+  .content-card {
+    padding: 1.7rem;
+  }
+  .card-title {
+    font-size: 1.5rem;
+  }
+  .card-content {
+    font-size: 1.3rem;
+  }
+  .bottom-nav {
+    height: 10vh;
+  }
+  .nav-container {
+    max-width: 65%;
+    padding: 0 2.5rem;
+  }
+  .nav-item {
+    padding: 0.8rem;
+  }
+  .nav-item svg {
+    width: 2rem;
+    height: 2rem;
   }
 }
