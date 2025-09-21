@@ -19,29 +19,28 @@ const icons = {
 };
 function updateNavigation() {
   const e = window.innerWidth;
-  if (((navContainer.innerHTML = ""), e <= 597)) {
-    ["courses", "constraints", "schedules"].forEach((e, t) => {
-      const n = document.createElement("button");
-      (n.className = `nav-item ${currentPage === e ? "active" : ""}`),
-        n.setAttribute("data-page", e),
-        (n.innerHTML = icons[e]),
-        n.addEventListener("click", () => showPage(e)),
-        navContainer.appendChild(n);
-    });
-    "combined" !== currentPage || showPage("courses");
-  } else {
-    ["combined", "schedules"].forEach((e, t) => {
-      const n = document.createElement("button");
-      (n.className = `nav-item ${currentPage === e ? "active" : ""}`),
-        n.setAttribute("data-page", e),
-        (n.innerHTML = icons[e]),
-        n.addEventListener("click", () => showPage(e)),
-        "schedules" === e && (n.style.marginLeft = "auto"),
-        navContainer.appendChild(n);
-    }),
-      ("courses" !== currentPage && "constraints" !== currentPage) ||
-        showPage("combined");
-  }
+  (navContainer.innerHTML = ""),
+    e <= 597
+      ? (["courses", "constraints", "schedules"].forEach((e, t) => {
+          const n = document.createElement("button");
+          (n.className = `nav-item ${currentPage === e ? "active" : ""}`),
+            n.setAttribute("data-page", e),
+            (n.innerHTML = icons[e]),
+            n.addEventListener("click", () => showPage(e)),
+            navContainer.appendChild(n);
+        }),
+        "combined" !== currentPage || showPage("courses"))
+      : (["combined", "schedules"].forEach((e, t) => {
+          const n = document.createElement("button");
+          (n.className = `nav-item ${currentPage === e ? "active" : ""}`),
+            n.setAttribute("data-page", e),
+            (n.innerHTML = icons[e]),
+            n.addEventListener("click", () => showPage(e)),
+            "schedules" === e && (n.style.marginLeft = "auto"),
+            navContainer.appendChild(n);
+        }),
+        ("courses" !== currentPage && "constraints" !== currentPage) ||
+          showPage("combined"));
 }
 function showPage(e) {
   pages.forEach((e) => {
@@ -53,9 +52,214 @@ function showPage(e) {
   n.forEach((e) => {
     e.classList.remove("active");
   });
-  const c = [...n].find((t) => t.getAttribute("data-page") === e);
-  c && c.classList.add("active");
+  const s = [...n].find((t) => t.getAttribute("data-page") === e);
+  s && s.classList.add("active");
 }
 updateNavigation(),
   window.addEventListener("resize", updateNavigation),
   body.setAttribute("data-theme", "light");
+class CourseManager {
+  constructor() {
+    (this.courses = JSON.parse(localStorage.getItem("courses")) || []),
+      (this.currentCourse = null),
+      (this.currentLectures = []),
+      (this.currentSections = []),
+      this.initializeEventListeners(),
+      this.renderCourses();
+  }
+  initializeEventListeners() {
+    document
+      .getElementById("addCourseBtn")
+      .addEventListener("click", () => this.showModal()),
+      document
+        .querySelector(".modal-backdrop")
+        .addEventListener("click", () => this.saveAndHideModal()),
+      document.querySelectorAll(".tab-btn").forEach((e) => {
+        e.addEventListener("click", (e) =>
+          this.switchTab(e.target.dataset.tab)
+        );
+      }),
+      document
+        .getElementById("addLectureBtn")
+        .addEventListener("click", () => this.addLecture()),
+      document
+        .getElementById("addSectionBtn")
+        .addEventListener("click", () => this.addSection()),
+      document
+        .getElementById("courseNameInput")
+        .addEventListener("input", (e) => {
+          document.getElementById("addCourseBtn").disabled =
+            !e.target.value.trim();
+        });
+  }
+  showModal(e = null) {
+    (this.currentCourse = e),
+      (this.currentLectures = e ? [...e.lectures] : []),
+      (this.currentSections = e ? [...e.sections] : []),
+      document.getElementById("courseModal").classList.add("show"),
+      e
+        ? (document.getElementById("courseNameInput").value = e.name)
+        : (this.clearForm("lecture"), this.clearForm("section")),
+      this.renderLectures(),
+      this.renderSections(),
+      this.switchTab("lectures");
+  }
+  hideModal() {
+    const e = null !== this.currentCourse;
+    document.getElementById("courseModal").classList.remove("show"),
+      this.resetModal(),
+      e || (document.getElementById("courseNameInput").value = "");
+  }
+  saveAndHideModal() {
+    this.saveCourse(), this.hideModal();
+  }
+  resetModal() {
+    this.clearForm("lecture"),
+      this.clearForm("section"),
+      (this.currentLectures = []),
+      (this.currentSections = []),
+      (this.currentCourse = null);
+  }
+  switchTab(e) {
+    document.querySelectorAll(".tab-btn").forEach((t) => {
+      t.classList.toggle("active", t.dataset.tab === e);
+    }),
+      document.querySelectorAll(".tab-content").forEach((t) => {
+        t.classList.toggle("active", t.id === `${e}Tab`);
+      });
+  }
+  clearForm(e) {
+    (document.getElementById(`${e}Day`).value = "SAT"),
+      (document.getElementById(`${e}Period`).value = "8:30"),
+      (document.getElementById(`${e}Room`).value = ""),
+      (document.getElementById(`${e}Opportunity`).value = "not important");
+  }
+  addLecture() {
+    const e = {
+      id: Date.now(),
+      day: document.getElementById("lectureDay").value,
+      period: document.getElementById("lecturePeriod").value,
+      room: document.getElementById("lectureRoom").value,
+      opportunity: document.getElementById("lectureOpportunity").value,
+    };
+    this.currentLectures.unshift(e),
+      this.renderLectures(),
+      this.clearForm("lecture"),
+      this.saveCourseWithoutClosing();
+  }
+  addSection() {
+    const e = {
+      id: Date.now(),
+      day: document.getElementById("sectionDay").value,
+      period: document.getElementById("sectionPeriod").value,
+      room: document.getElementById("sectionRoom").value,
+      opportunity: document.getElementById("sectionOpportunity").value,
+    };
+    this.currentSections.unshift(e),
+      this.renderSections(),
+      this.clearForm("section"),
+      this.saveCourseWithoutClosing();
+  }
+  renderLectures() {
+    document.getElementById("lecturesList").innerHTML = this.currentLectures
+      .map(
+        (e) =>
+          `\n      <div class="item-entry">\n        <div class="item-info">\n          <div><strong>${
+            e.day
+          }</strong> at ${e.period}</div>\n          <div>Room: ${
+            e.room || "N/A"
+          } | ${
+            e.opportunity
+          }</div>\n        </div>\n        <button class="delete-item-btn" onclick="courseManager.deleteLecture(${
+            e.id
+          })">Delete</button>\n      </div>\n    `
+      )
+      .join("");
+  }
+  renderSections() {
+    document.getElementById("sectionsList").innerHTML = this.currentSections
+      .map(
+        (e) =>
+          `\n      <div class="item-entry">\n        <div class="item-info">\n          <div><strong>${
+            e.day
+          }</strong> at ${e.period}</div>\n          <div>Room: ${
+            e.room || "N/A"
+          } | ${
+            e.opportunity
+          }</div>\n        </div>\n        <button class="delete-item-btn" onclick="courseManager.deleteSection(${
+            e.id
+          })">Delete</button>\n      </div>\n    `
+      )
+      .join("");
+  }
+  deleteLecture(e) {
+    (this.currentLectures = this.currentLectures.filter((t) => t.id !== e)),
+      this.renderLectures();
+  }
+  deleteSection(e) {
+    (this.currentSections = this.currentSections.filter((t) => t.id !== e)),
+      this.renderSections();
+  }
+  saveCourse() {
+    const e = document.getElementById("courseNameInput").value.trim(),
+      t = {
+        id: this.currentCourse ? this.currentCourse.id : Date.now(),
+        name: e,
+        lectures: this.currentLectures,
+        sections: this.currentSections,
+      };
+    if (this.currentCourse) {
+      const e = this.courses.findIndex((e) => e.id === this.currentCourse.id);
+      this.courses[e] = t;
+    } else this.courses.unshift(t);
+    this.saveToStorage(),
+      this.renderCourses(),
+      this.hideModal(),
+      (document.getElementById("courseNameInput").value = "");
+  }
+  saveCourseWithoutClosing() {
+    const e = document.getElementById("courseNameInput").value.trim();
+    if (!this.currentCourse) return;
+    const t = {
+        id: this.currentCourse.id,
+        name: e,
+        lectures: this.currentLectures,
+        sections: this.currentSections,
+      },
+      n = this.courses.findIndex((e) => e.id === this.currentCourse.id);
+    (this.courses[n] = t), this.saveToStorage(), this.renderCourses();
+  }
+  deleteCourse(e) {
+    (this.courses = this.courses.filter((t) => t.id !== e)),
+      this.saveToStorage(),
+      this.renderCourses();
+  }
+  editCourse(e) {
+    const t = this.courses.find((t) => t.id === e);
+    t && this.showModal(t);
+  }
+  renderCourses() {
+    document.getElementById("coursesList").innerHTML = this.courses
+      .map(
+        (e) =>
+          `\n      <div class="course-item">\n        <div class="course-info">\n          <h3>${
+            e.name
+          }</h3>\n          <div class="course-stats">\n            ${
+            e.lectures.length
+          } Lecture${1 !== e.lectures.length ? "s" : ""}, \n            ${
+            e.sections.length
+          } Section${
+            1 !== e.sections.length ? "s" : ""
+          }\n          </div>\n        </div>\n        <div class="course-actions">\n          <button class="edit-btn" onclick="courseManager.editCourse(${
+            e.id
+          })">Edit</button>\n          <button class="delete-btn" onclick="courseManager.deleteCourse(${
+            e.id
+          })">Delete</button>\n        </div>\n      </div>\n    `
+      )
+      .join("");
+  }
+  saveToStorage() {
+    localStorage.setItem("courses", JSON.stringify(this.courses));
+  }
+}
+const courseManager = new CourseManager();

@@ -17,46 +17,20 @@
     </header>
     <main class="main-content">
       <div class="page active" id="courses">
-        <div class="page-header">
-          <h2 class="page-title">Courses</h2>
-          <p class="page-subtitle">Available course catalog</p>
-        </div>
-        <div class="content-grid">
-          <div class="content-card">
-            <h3 class="card-title">Mathematics</h3>
-            <p class="card-content">
-              Advanced calculus and linear algebra fundamentals for engineering
-              students.
-            </p>
-          </div>
-          <div class="content-card">
-            <h3 class="card-title">Computer Science</h3>
-            <p class="card-content">
-              Programming principles, data structures, and algorithm design
-              methodologies.
-            </p>
-          </div>
-          <div class="content-card">
-            <h3 class="card-title">Physics</h3>
-            <p class="card-content">
-              Classical mechanics, thermodynamics, and electromagnetic theory
-              applications.
-            </p>
-          </div>
-          <div class="content-card">
-            <h3 class="card-title">Chemistry</h3>
-            <p class="card-content">
-              Organic and inorganic chemistry with laboratory research
-              components.
-            </p>
+        <div class="course-input-section">
+          <div class="input-group">
+            <input
+              type="text"
+              id="courseNameInput"
+              placeholder="Enter course name"
+              class="course-name-input"
+            />
+            <button id="addCourseBtn" class="add-course-btn">Add Course</button>
           </div>
         </div>
+        <div id="coursesList" class="courses-list"></div>
       </div>
       <div class="page" id="constraints">
-        <div class="page-header">
-          <h2 class="page-title">Constraints</h2>
-          <p class="page-subtitle">Schedule preferences and limitations</p>
-        </div>
         <div class="content-grid">
           <div class="content-card">
             <h3 class="card-title">Time Preferences</h3>
@@ -80,10 +54,6 @@
         </div>
       </div>
       <div class="page" id="combined">
-        <div class="page-header">
-          <h2 class="page-title">Overview</h2>
-          <p class="page-subtitle">Courses and scheduling constraints</p>
-        </div>
         <div class="content-grid">
           <div class="content-card">
             <h3 class="card-title">Available Courses</h3>
@@ -116,10 +86,6 @@
         </div>
       </div>
       <div class="page" id="schedules">
-        <div class="page-header">
-          <h2 class="page-title">Schedules</h2>
-          <p class="page-subtitle">Generated course schedules</p>
-        </div>
         <div class="content-grid">
           <div class="content-card">
             <h3 class="card-title">Fall Semester</h3>
@@ -145,6 +111,103 @@
         </div>
       </div>
     </main>
+    <div id="courseModal" class="modal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="modal-tabs">
+            <button class="tab-btn active" data-tab="lectures">Lectures</button>
+            <button class="tab-btn" data-tab="sections">Sections</button>
+          </div>
+          <div id="lecturesTab" class="tab-content active">
+            <div class="form-group">
+              <label for="lectureDay">Day:</label>
+              <select id="lectureDay" class="form-input">
+                <option value="SAT">Saturday</option>
+                <option value="SUN">Sunday</option>
+                <option value="MON">Monday</option>
+                <option value="TUE">Tuesday</option>
+                <option value="WED">Wednesday</option>
+                <option value="THU">Thursday</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="lecturePeriod">Period:</label>
+              <select id="lecturePeriod" class="form-input">
+                <option value="8:30">8:30</option>
+                <option value="10:30">10:30</option>
+                <option value="12:30">12:30</option>
+                <option value="2:30">2:30</option>
+                <option value="4:30">4:30</option>
+                <option value="6:30">6:30</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="lectureRoom">Room Number:</label>
+              <input
+                type="text"
+                id="lectureRoom"
+                class="form-input"
+                placeholder="Optional"
+              />
+            </div>
+            <div class="form-group">
+              <label for="lectureOpportunity">Opportunity:</label>
+              <select id="lectureOpportunity" class="form-input">
+                <option value="not important">Not Important</option>
+                <option value="semi-important">Semi-Important</option>
+                <option value="important">Important</option>
+              </select>
+            </div>
+            <button id="addLectureBtn" class="add-item-btn">Add Lecture</button>
+            <div id="lecturesList" class="items-list"></div>
+          </div>
+          <div id="sectionsTab" class="tab-content">
+            <div class="form-group">
+              <label for="sectionDay">Day:</label>
+              <select id="sectionDay" class="form-input">
+                <option value="SAT">Saturday</option>
+                <option value="SUN">Sunday</option>
+                <option value="MON">Monday</option>
+                <option value="TUE">Tuesday</option>
+                <option value="WED">Wednesday</option>
+                <option value="THU">Thursday</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="sectionPeriod">Period:</label>
+              <select id="sectionPeriod" class="form-input">
+                <option value="8:30">8:30</option>
+                <option value="10:30">10:30</option>
+                <option value="12:30">12:30</option>
+                <option value="2:30">2:30</option>
+                <option value="4:30">4:30</option>
+                <option value="6:30">6:30</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="sectionRoom">Room Number:</label>
+              <input
+                type="text"
+                id="sectionRoom"
+                class="form-input"
+                placeholder="Optional"
+              />
+            </div>
+            <div class="form-group">
+              <label for="sectionOpportunity">Opportunity:</label>
+              <select id="sectionOpportunity" class="form-input">
+                <option value="not important">Not Important</option>
+                <option value="semi-important">Semi-Important</option>
+                <option value="important">Important</option>
+              </select>
+            </div>
+            <button id="addSectionBtn" class="add-item-btn">Add Section</button>
+            <div id="sectionsList" class="items-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <nav class="bottom-nav">
       <div class="nav-container" id="navContainer"></div>
     </nav>
