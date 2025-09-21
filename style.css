@@ -12,6 +12,11 @@
   --accent: #4a5568;
   --shadow: rgba(0, 0, 0, 0.1);
   --icon-size: 1.3rem;
+  --toggle-width: 1.8rem;
+  --toggle-height: 0.9rem;
+  --toggle-knob: 0.75rem;
+  --toggle-translate: 0.9rem;
+  --app-title-size: 1.4rem;
 }
 [data-theme="dark"] {
   --bg-primary: #1a202c;
@@ -19,7 +24,7 @@
   --text-primary: #f7fafc;
   --text-secondary: #a0aec0;
   --border: #4a5568;
-  --accent: #e2e8f0;
+  --accent: #cbd5e0;
   --shadow: rgba(0, 0, 0, 0.3);
 }
 body {
@@ -45,6 +50,7 @@ body {
   font-weight: 700;
   color: var(--text-primary);
   user-select: none;
+  font-size: var(--app-title-size);
 }
 .theme-toggle {
   position: relative;
@@ -54,19 +60,23 @@ body {
   transition: background 0.3s ease;
   border: none;
   outline: 0;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
 }
 .theme-toggle::after {
   content: "";
   position: absolute;
-  top: 0.2rem;
+  top: calc((var(--toggle-height) - var(--toggle-knob)) / 2);
   left: 0.2rem;
   background: var(--bg-primary);
   border-radius: 50%;
   transition: transform 0.3s ease;
+  width: var(--toggle-knob);
+  height: var(--toggle-knob);
   box-shadow: 0 0.2rem 0.5rem var(--shadow);
 }
 [data-theme="dark"] .theme-toggle::after {
-  transform: translateX(1.5rem);
+  transform: translateX(var(--toggle-translate));
 }
 .main-content {
   margin: 0 auto;
@@ -174,19 +184,17 @@ body {
     height: 4.5vh;
     padding: 0 0.4rem;
   }
-  .app-title {
-    font-size: 1rem;
+  :root {
+    --app-title-size: 1rem;
   }
-  .theme-toggle {
-    width: 2.2rem;
-    height: 1.1rem;
+  .nav-item.active {
+    padding: 0.6rem;
   }
-  .theme-toggle::after {
-    width: 0.9rem;
-    height: 0.9rem;
-  }
-  [data-theme="dark"] .theme-toggle::after {
-    transform: translateX(1.1rem);
+  :root {
+    --toggle-width: 1.7rem;
+    --toggle-height: 0.85rem;
+    --toggle-knob: 0.7rem;
+    --toggle-translate: 0.85rem;
   }
   .main-content {
     padding: 1.5vh;
@@ -242,19 +250,17 @@ body {
     height: 5.5vh;
     padding: 0 0.7rem;
   }
-  .app-title {
-    font-size: 1.2rem;
+  :root {
+    --app-title-size: 1.1rem;
   }
-  .theme-toggle {
-    width: 2.7rem;
-    height: 1.4rem;
+  .nav-item.active {
+    padding: 0.7rem;
   }
-  .theme-toggle::after {
-    width: 1.1rem;
-    height: 1.1rem;
-  }
-  [data-theme="dark"] .theme-toggle::after {
-    transform: translateX(1.4rem);
+  :root {
+    --toggle-width: 1.85rem;
+    --toggle-height: 0.95rem;
+    --toggle-knob: 0.8rem;
+    --toggle-translate: 0.95rem;
   }
   .main-content {
     padding: 1.8vh;
@@ -310,19 +316,17 @@ body {
     height: 6vh;
     padding: 0 0.8rem;
   }
-  .app-title {
-    font-size: 1.3rem;
+  :root {
+    --app-title-size: 1.15rem;
   }
-  .theme-toggle {
-    width: 2.8rem;
-    height: 1.4rem;
+  .nav-item.active {
+    padding: 0.75rem;
   }
-  .theme-toggle::after {
-    width: 1.1rem;
-    height: 1.1rem;
-  }
-  [data-theme="dark"] .theme-toggle::after {
-    transform: translateX(1.5rem);
+  :root {
+    --toggle-width: 2.05rem;
+    --toggle-height: 1.1rem;
+    --toggle-knob: 0.95rem;
+    --toggle-translate: 1.1rem;
   }
   .main-content {
     padding: 2vh;
@@ -378,19 +382,17 @@ body {
     height: 6.5vh;
     padding: 0 1rem;
   }
-  .app-title {
-    font-size: 1.4rem;
+  :root {
+    --app-title-size: 1.2rem;
   }
-  .theme-toggle {
-    width: 3rem;
-    height: 1.5rem;
+  .nav-item.active {
+    padding: 0.8rem;
   }
-  .theme-toggle::after {
-    width: 1.2rem;
-    height: 1.2rem;
-  }
-  [data-theme="dark"] .theme-toggle::after {
-    transform: translateX(1.5rem);
+  :root {
+    --toggle-width: 2.25rem;
+    --toggle-height: 1.15rem;
+    --toggle-knob: 1rem;
+    --toggle-translate: 1.15rem;
   }
   .main-content {
     padding: 2.2vh;
@@ -445,19 +447,17 @@ body {
     height: 6.5vh;
     padding: 0 1rem;
   }
-  .app-title {
-    font-size: 1.4rem;
+  :root {
+    --app-title-size: 1.2rem;
   }
-  .theme-toggle {
-    width: 3rem;
-    height: 1.5rem;
+  .nav-item.active {
+    padding: 0.8rem;
   }
-  .theme-toggle::after {
-    width: 1.2rem;
-    height: 1.2rem;
-  }
-  [data-theme="dark"] .theme-toggle::after {
-    transform: translateX(1.5rem);
+  :root {
+    --toggle-width: 2.4rem;
+    --toggle-height: 1.25rem;
+    --toggle-knob: 1.05rem;
+    --toggle-translate: 1.25rem;
   }
   .main-content {
     padding: 2.2vh;
@@ -513,19 +513,18 @@ body {
     height: 6.5vh;
     padding: 0 1.2rem;
   }
-  .app-title {
-    font-size: 1.5rem;
+  :root {
+    --app-title-size: 1.25rem;
   }
-  .theme-toggle {
-    width: 3.2rem;
-    height: 1.6rem;
+  .nav-item.active {
+    padding: 0.35rem 0.9rem;
+    font-size: 1rem;
   }
-  .theme-toggle::after {
-    width: 1.3rem;
-    height: 1.3rem;
-  }
-  [data-theme="dark"] .theme-toggle::after {
-    transform: translateX(1.6rem);
+  :root {
+    --toggle-width: 2.45rem;
+    --toggle-height: 1.3rem;
+    --toggle-knob: 1.1rem;
+    --toggle-translate: 1.3rem;
   }
   .main-content {
     padding: 2.2vh;
@@ -581,19 +580,18 @@ body {
     height: 7vh;
     padding: 0 2rem;
   }
-  .app-title {
-    font-size: 1.8rem;
+  :root {
+    --app-title-size: 1.3rem;
   }
-  .theme-toggle {
-    width: 4rem;
-    height: 2rem;
+  .nav-item.active {
+    padding: 0.4rem 1.1rem;
+    font-size: 1.05rem;
   }
-  .theme-toggle::after {
-    width: 1.6rem;
-    height: 1.6rem;
-  }
-  [data-theme="dark"] .theme-toggle::after {
-    transform: translateX(2rem);
+  :root {
+    --toggle-width: 2.7rem;
+    --toggle-height: 1.45rem;
+    --toggle-knob: 1.15rem;
+    --toggle-translate: 1.45rem;
   }
   .main-content {
     padding: 2.3vh;
@@ -649,19 +647,18 @@ body {
     height: 9vh;
     padding: 0 2.5rem;
   }
-  .app-title {
-    font-size: 2rem;
+  :root {
+    --app-title-size: 1.4rem;
   }
-  .theme-toggle {
-    width: 4.5rem;
-    height: 2.2rem;
+  .nav-item.active {
+    padding: 0.45rem 1.2rem;
+    font-size: 1.1rem;
   }
-  .theme-toggle::after {
-    width: 1.8rem;
-    height: 1.8rem;
-  }
-  [data-theme="dark"] .theme-toggle::after {
-    transform: translateX(2.3rem);
+  :root {
+    --toggle-width: 3rem;
+    --toggle-height: 1.5rem;
+    --toggle-knob: 1.2rem;
+    --toggle-translate: 1.5rem;
   }
   .main-content {
     padding: 3vh;

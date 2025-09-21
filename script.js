@@ -22,22 +22,22 @@ function updateNavigation() {
   (navContainer.innerHTML = ""),
     e <= 597
       ? (["courses", "constraints", "schedules"].forEach((e, t) => {
-          const n = document.createElement("button");
-          (n.className = `nav-item ${currentPage === e ? "active" : ""}`),
-            n.setAttribute("data-page", e),
-            (n.innerHTML = icons[e]),
-            n.addEventListener("click", () => showPage(e)),
-            navContainer.appendChild(n);
+          const s = document.createElement("button");
+          (s.className = `nav-item ${currentPage === e ? "active" : ""}`),
+            s.setAttribute("data-page", e),
+            (s.innerHTML = icons[e]),
+            s.addEventListener("click", () => showPage(e)),
+            navContainer.appendChild(s);
         }),
         "combined" !== currentPage || showPage("courses"))
       : (["combined", "schedules"].forEach((e, t) => {
-          const n = document.createElement("button");
-          (n.className = `nav-item ${currentPage === e ? "active" : ""}`),
-            n.setAttribute("data-page", e),
-            (n.innerHTML = icons[e]),
-            n.addEventListener("click", () => showPage(e)),
-            "schedules" === e && (n.style.marginLeft = "auto"),
-            navContainer.appendChild(n);
+          const s = document.createElement("button");
+          (s.className = `nav-item ${currentPage === e ? "active" : ""}`),
+            s.setAttribute("data-page", e),
+            (s.innerHTML = icons[e]),
+            s.addEventListener("click", () => showPage(e)),
+            "schedules" === e && (s.style.marginLeft = "auto"),
+            navContainer.appendChild(s);
         }),
         ("courses" !== currentPage && "constraints" !== currentPage) ||
           showPage("combined"));
@@ -48,12 +48,12 @@ function showPage(e) {
   });
   const t = document.getElementById(e);
   t && (t.classList.add("active"), (currentPage = e));
-  const n = navContainer.querySelectorAll(".nav-item");
-  n.forEach((e) => {
+  const s = navContainer.querySelectorAll(".nav-item");
+  s.forEach((e) => {
     e.classList.remove("active");
   });
-  const s = [...n].find((t) => t.getAttribute("data-page") === e);
-  s && s.classList.add("active");
+  const n = [...s].find((t) => t.getAttribute("data-page") === e);
+  n && n.classList.add("active");
 }
 updateNavigation(),
   window.addEventListener("resize", updateNavigation),
@@ -68,12 +68,21 @@ class CourseManager {
       this.renderCourses();
   }
   initializeEventListeners() {
-    document
-      .getElementById("addCourseBtn")
-      .addEventListener("click", () => this.showModal()),
-      document
-        .querySelector(".modal-backdrop")
-        .addEventListener("click", () => this.saveAndHideModal()),
+    document.getElementById("addCourseBtn").addEventListener("click", () => {
+      const e = document.getElementById("courseNameInput");
+      if (!e) return;
+      const t = e.value.trim();
+      if ("" === t) return void e.focus();
+      const s = this.courses.find(
+        (e) => e.name && e.name.trim().toLowerCase() === t.toLowerCase()
+      );
+      if (s) return void this.showModal(s);
+      const n = { id: Date.now(), name: t, lectures: [], sections: [] };
+      this.courses.unshift(n),
+        this.saveToStorage(),
+        this.renderCourses(),
+        this.showModal(n);
+    }),
       document.querySelectorAll(".tab-btn").forEach((e) => {
         e.addEventListener("click", (e) =>
           this.switchTab(e.target.dataset.tab)
@@ -91,6 +100,10 @@ class CourseManager {
           document.getElementById("addCourseBtn").disabled =
             !e.target.value.trim();
         });
+  }
+  addModalBackdropListener() {
+    const e = document.querySelector(".modal-backdrop");
+    e && e.addEventListener("click", () => this.hideModal());
   }
   showModal(e = null) {
     (this.currentCourse = e),
@@ -226,8 +239,8 @@ class CourseManager {
         lectures: this.currentLectures,
         sections: this.currentSections,
       },
-      n = this.courses.findIndex((e) => e.id === this.currentCourse.id);
-    (this.courses[n] = t), this.saveToStorage(), this.renderCourses();
+      s = this.courses.findIndex((e) => e.id === this.currentCourse.id);
+    (this.courses[s] = t), this.saveToStorage(), this.renderCourses();
   }
   deleteCourse(e) {
     (this.courses = this.courses.filter((t) => t.id !== e)),
@@ -263,3 +276,6 @@ class CourseManager {
   }
 }
 const courseManager = new CourseManager();
+window.addEventListener("DOMContentLoaded", () => {
+  courseManager.addModalBackdropListener();
+});
